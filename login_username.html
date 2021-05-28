@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet</title>
+    <style>
+        div {text-align: center;}
+    </style>
+</head>
+<body>
+<div>
+    <h1>Wallet Login</h1>
+    <p>Username: <input type="text", id="usern"></p>
+    <p>Password: <input type="text", id="pword"></p>
+    <button onclick="Login()">Login</button>
+    <A HREF = "register.html"><button>Register</button></A>
+    <p id="display"></p>
+</div>
+</body>
+<script>
+    async function Login(){
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+    var MN=document.getElementById("usern").value;
+    var DI=document.getElementById("pword").value;
+    fetch("http://localhost:8080/User/LoginUser",{
+        method:'POST',
+        body:JSON.stringify({username: MN, password: DI}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json)
+        localStorage.setItem("loginResponse", JSON.stringify(json))
+        var login_username_Resp=JSON.parse(localStorage.getItem("loginResponse"));
+        console.log(login_username_Resp.responseCode)
+        document.getElementById("display").innerHTML=login_username_Resp.response;
+        if(login_username_Resp.responseCode=="OK"){
+        console.log(login_username_Resp.responseCode)
+        localStorage.setItem("CurrentUser_mobile",MN)
+        login_username_Resp=null
+        window.location.href = "home.html";
+    }
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+    
+}
+
+
+</script>
+</html>
