@@ -42,9 +42,9 @@
     .then(json => {
         console.log(json);
         localStorage.setItem("register_Mobile_Response", JSON.stringify(json));
-        var resp=JSON.parse(localStorage.getItem("register_Mobile_Response"));
-        console.log(resp.responseCode);
-        document.getElementById("display").innerHTML=resp.response;
+        var login_mobile_response=JSON.parse(localStorage.getItem("register_Mobile_Response"));
+        console.log(login_mobile_response.responseCode);
+        document.getElementById("display").innerHTML=login_mobile_response.response;
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
     
@@ -70,17 +70,18 @@
     .then(json => {
         console.log(json);
         localStorage.setItem("login_OTP_Response", JSON.stringify(json));
-        var resp1=JSON.parse(localStorage.getItem("login_OTP_Response"));
-        console.log(resp1.responseCode);
-        document.getElementById("displayOTP").innerHTML=resp1.response;
-    })
-    .catch(error => console.log('Authorization failed : ' + error.message));
-    var resp1=JSON.parse(localStorage.getItem("login_OTP_Response"));
-    if(resp1.responseCode==="OK"){
-        document.getElementById("displayOTP").innerHTML=resp1.response;
+        var login_mobile_response2=JSON.parse(localStorage.getItem("login_OTP_Response"));
+        console.log(login_mobile_response2.responseCode);
+        document.getElementById("displayOTP").innerHTML=login_mobile_response2.response;
+        if(login_mobile_response2.responseCode==="OK"){
+        document.getElementById("displayOTP").innerHTML=login_mobile_response2.response;
         localStorage.setItem("CurrentUser_mobile",MN)
         window.location.href = "home.html";
 }
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+    //var login_mobile_response2=JSON.parse(localStorage.getItem("login_OTP_Response"));
+    
 
     }
 
