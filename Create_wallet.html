@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet</title>
+    <style>
+        div {text-align: center;}
+    </style>
+</head>
+<body>
+<form >
+    <h1>Create Wallet</h1>
+    <p>Mobile No: <input type="text", id="mobileno"></p>
+    <p>Currency: <input type="text", id="currency"></p>
+    <p>Status: <select id="status">
+        <option>ACTIVE</option>
+        <option>INACTIVE</option>    
+    </select>
+    <input type="submit">
+    <p id="display"></p>
+</form>
+</body>
+<script>
+    async function Create(e){
+        var resp
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var mobileno=document.getElementById("mobileno").value;
+        var currency=document.getElementById("currency").value;
+        var status=document.getElementById("status").value;
+    await fetch("http://localhost:8080/Wallet/CreateWallet",{
+        method:'PUT',
+        body:JSON.stringify({mobileno: mobileno, currency: currency,status: status}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json)
+        resp = json
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+    console.log(resp.responseCode)
+    if(resp.responseCode==="OK"){
+        document.getElementById("display").innerHTML=resp.response;
+        window.location.href = "home.html",true;
+    }
+    else{
+        document.getElementById("display").innerHTML=resp.response;
+    }
+}
+
+document.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    var numbers = /^[0-9]+$/;
+    var mobileno=document.getElementById("mobileno").value;
+    var currency=document.getElementById("currency").value;
+    if(!mobileno.match(numbers)){
+        return alert("Only numbers allowed");
+    }
+    if(currency.length!=3){
+        return alert("Incorrect currency");
+    }
+    Create(e);
+})
+</script>
+</html>
