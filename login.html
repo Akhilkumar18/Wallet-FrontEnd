@@ -4,48 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet</title>
+    <title>Login to Wallet</title>
     <style>
         div {text-align: center;}
     </style>
 </head>
 <body>
-<div>
-    <h1>Wallet Login</h1>
-    <p>Username: <input type="text", id="usern"></p>
-    <p>Password: <input type="text", id="pword"></p>
-    <button onclick="Login()">Login</button>
-    <A HREF = "register.html"><button>Register</button></A>
-    <p id="display"></p>
-</div>
+    <div>
+        <h1>Login to the wallet</h1>
+        <p>
+        <A HREF = "login_mobile.html"><button>Login with Mobile Number</button></A>
+        <A HREF = "login_username.html"><button>Login With Username and Password</button></A>
+    </p>
+        <A HREF = "register.html"><button>Register</button></A>
+    </div>
+    
 </body>
-<script>
-    async function Login(){
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
-    var MN=document.getElementById("usern").value;
-    var DI=document.getElementById("pword").value;
-    fetch("http://localhost:8080/User/LoginUser",{
-        method:'POST',
-        body:JSON.stringify({username: MN, password: DI}),
-        headers: headers
-    })
-    .then(response => response.json())
-    .then(json => {
-        console.log(json)
-        localStorage.setItem("loginResponse", JSON.stringify(json))
-    })
-    .catch(error => console.log('Authorization failed : ' + error.message));
-    var resp=JSON.parse(localStorage.getItem("loginResponse"))
-    console.log(resp.responseCode)
-    if(resp.responseCode!="OK"){
-        document.getElementById("display").innerHTML=resp.response;
-    }else{
-
-    }
-}
-
-
-</script>
 </html>

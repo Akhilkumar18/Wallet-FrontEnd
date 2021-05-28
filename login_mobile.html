@@ -11,7 +11,7 @@
 </head>
 <body>
 <div>
-    <h1>Create Wallet Account with mobile number</h1>
+    <h1>Login with mobile number</h1>
     <p>Mobile No: <input type="text", id="Mobileinput"></p>
     <p>Device id: <input type="text", id="Didinput"></p>
     <button onclick="Create()">Login</button>
@@ -31,8 +31,8 @@
         headers.append('Content-Type', 'application/json');
     var MN=document.getElementById("Mobileinput").value;
     var DI=document.getElementById("Didinput").value;
-    fetch("http://localhost:8080/User/CreateUserwithMobileNo",{
-        method:'PUT',
+    fetch("http://localhost:8080/User/LoginUserwithMobileNo",{
+        method:'POST',
         body:JSON.stringify({mobileno: MN, deviceid: DI}),
         headers: headers
         
@@ -69,15 +69,20 @@
     .then(response => response.json())
     .then(json => {
         console.log(json);
-        localStorage.setItem("register_OTP_Response", JSON.stringify(json));
-        var resp1=JSON.parse(localStorage.getItem("register_OTP_Response"));
+        localStorage.setItem("login_OTP_Response", JSON.stringify(json));
+        var resp1=JSON.parse(localStorage.getItem("login_OTP_Response"));
         console.log(resp1.responseCode);
         document.getElementById("displayOTP").innerHTML=resp1.response;
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
-    
-    
+    var resp1=JSON.parse(localStorage.getItem("login_OTP_Response"));
+    if(resp1.responseCode==="OK"){
+        document.getElementById("displayOTP").innerHTML=resp1.response;
+        localStorage.setItem("CurrentUser_mobile",MN)
+        window.location.href = "home.html";
 }
+
+    }
 
 
 
