@@ -44,7 +44,7 @@
     console.log(resp.responseCode)
     if(resp.responseCode==="OK"){
         document.getElementById("display").innerHTML=resp.response;
-        window.location.href = "home.html",true;
+        //window.location.href = "home.html",true;
     }
     else{
         document.getElementById("display").innerHTML=resp.response;
@@ -56,12 +56,8 @@ document.querySelector('form').addEventListener('submit', (e) => {
     var numbers = /^[0-9]+$/;
     var mobileno=document.getElementById("mobileno").value;
     var currency=document.getElementById("currency").value;
-    if(!mobileno.match(numbers)){
-        return alert("Only numbers allowed");
-    }
-    if(currency.length!=3){
-        return alert("Incorrect currency");
-    }
+    if(!mobileno.match(numbers)) return alert("Only numbers allowed");
+    if(currency.length!=3) return alert("Incorrect currency");
     Create(e);
 })
 </script>

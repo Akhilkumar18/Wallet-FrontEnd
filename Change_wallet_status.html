@@ -20,11 +20,15 @@
     </select>
     <input type="submit">
     <p id="display"></p>
+    <p>OTP: <input type="number", id="OTPinput"></p>
+    <button id="validateotp" onclick="OTPvalidation()">Validate OTP</button>
+    <p id="otpresponse"></p>
+    <p id="displayOTP"></p>
 </form>
 </body>
 <script>
-    async function Create(e){
-        var resp
+    async function Create(){
+        document.getElementById("display").innerHTML="";
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         var mobileno=document.getElementById("mobileno").value;
@@ -37,19 +41,38 @@
     })
     .then(response => response.json())
     .then(json => {
-        console.log(json)
-        resp = json
+        console.log(json);
+        localStorage.setItem("change_wallet_Mobile_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("change_wallet_Mobile_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display").innerHTML=resp.response;
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
-    console.log(resp.responseCode)
-    if(resp.responseCode==="OK"){
-        document.getElementById("display").innerHTML=resp.response;
-        window.location.href = "home.html",true;
-    }
-    else{
-        document.getElementById("display").innerHTML=resp.response;
-    }
 }
+
+    async function OTPvalidation(){
+        document.getElementById("displayOTP").innerHTML="";
+        let headers = new Headers();
+
+        headers.append('Content-Type', 'application/json');
+    var MN=document.getElementById("mobileno").value;
+    var otpin=document.getElementById("OTPinput").value;
+    fetch("http://localhost:8080/User/ValidateOTP",{
+        method:'POST',
+        body:JSON.stringify({mobileno: MN, otp: otpin}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("change_wallet_OTP_Response", JSON.stringify(json));
+        var resp1=JSON.parse(localStorage.getItem("change_wallet_OTP_Response"));
+        console.log(resp1.responseCode);
+        document.getElementById("displayOTP").innerHTML=resp1.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+    }
+
 
 document.querySelector('form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -58,7 +81,7 @@ document.querySelector('form').addEventListener('submit', (e) => {
     var walletid=document.getElementById("walletid").value;
     if(!mobileno.match(numbers)) return alert("Only numbers allowed");
     if(walletid.length!=14) return alert("Incorrect walletid");
-    Create(e);
+    Create();
 })
 </script>
 </html>

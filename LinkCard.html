@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Link Card</title>
+</head>
+<body>
+<form>
+<p>Card Issuer:
+<input type="text" id="card_issuer"></p>
+<p>Card Number
+<input type="text" id="card_number"></p>
+<p>CVV:
+<input type="text" id="cvv"></p>
+<p>Expiry
+<input type="text" id="expiry"></p>
+<p>Wallet ID:
+<input type="text" id="walletid"></p>
+<button value="Link" onclick="Create()"></button>
+<p id="display"></p>
+</form>
+</body>
+<script type="text/javascript">
+	async function Create(){
+        document.getElementById("display").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var card_issuer=document.getElementById("card_issuer").value;
+        var card_number=document.getElementById("card_number").value;
+        var cvv=document.getElementById("cvv").value;
+        var expiry=document.getElementById("expiry").value;
+        var walletid=document.getElementById("walletid").value;
+    	fetch("http://localhost:8080/Wallet/LinkCard",{
+        method:'POST',
+        body:JSON.stringify({card_issuer:card_issuer, card_number:card_number, cvv:cvv, expiry:expiry, walletid: walletid}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("LinkCard_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("LinkCard_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+</script>
+</html>
