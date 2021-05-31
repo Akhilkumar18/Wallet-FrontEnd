@@ -4,7 +4,6 @@
 	<title>Link Card</title>
 </head>
 <body>
-<form>
 <p>Card Issuer:
 <input type="text" id="card_issuer"></p>
 <p>Card Number
@@ -15,9 +14,8 @@
 <input type="text" id="expiry"></p>
 <p>Wallet ID:
 <input type="text" id="walletid"></p>
-<button value="Link" onclick="Create()"></button>
+<button value="Link" onclick="Create()">Link</button>
 <p id="display"></p>
-</form>
 </body>
 <script type="text/javascript">
 	async function Create(){
@@ -31,9 +29,10 @@
         var walletid=document.getElementById("walletid").value;
     	fetch("http://localhost:8080/Wallet/LinkCard",{
         method:'POST',
-        body:JSON.stringify({card_issuer:card_issuer, card_number:card_number, cvv:cvv, expiry:expiry, walletid: walletid}),
+        body:JSON.stringify({cardissuer:card_issuer, cardno:card_number, cvv:cvv, expiry:expiry, walletid: walletid}),
         headers: headers
     })
+
     .then(response => response.json())
     .then(json => {
         console.log(json);
