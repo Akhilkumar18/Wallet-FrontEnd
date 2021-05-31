@@ -73,6 +73,10 @@
         var resp1=JSON.parse(localStorage.getItem("register_OTP_Response"));
         console.log(resp1.responseCode);
         document.getElementById("displayOTP").innerHTML=resp1.response;
+        if(resp1.responseCode==="OK"){
+            localStorage.setItem("CurrentUser_mobile",MN)
+            window.location.href = "home.html";
+        }
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
     

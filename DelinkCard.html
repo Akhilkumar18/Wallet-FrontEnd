@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Delink Card</title>
+</head>
+<body>
+<p>Card Issuer:
+<input type="text" id="card_issuer"></p>
+<p>Card Number(Last 4 digits)
+<input type="text" id="card_number"></p>
+<p>Wallet ID:
+<input type="text" id="walletid"></p>
+<button value="Delink" onclick="Create()">Delink</button>
+<p id="display"></p>
+</body>
+<script type="text/javascript">
+	async function Create(){
+        document.getElementById("display").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var card_issuer=document.getElementById("card_issuer").value;
+        var card_number=document.getElementById("card_number").value;
+        var walletid=document.getElementById("walletid").value;
+    	fetch("http://localhost:8080/Wallet/DelinkCard",{
+        method:'POST',
+        body:JSON.stringify({cardissuer:card_issuer, cardno:card_number, walletid: walletid}),
+        headers: headers
+    })
+
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("DelinkCard_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("DelinkCard_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+</script>
+</html>
