@@ -11,7 +11,7 @@
 </head>
 <body>
 <div>
-    <h1>Create Wallet Account with mobile number</h1>
+    <h1>Register with mobile number</h1>
     <p>Mobile No: <input type="text", id="Mobileinput"></p>
     <p>Device id: <input type="text", id="Didinput"></p>
     <button onclick="Create()">Login</button>
@@ -72,7 +72,11 @@
         localStorage.setItem("register_OTP_Response", JSON.stringify(json));
         var resp1=JSON.parse(localStorage.getItem("register_OTP_Response"));
         console.log(resp1.responseCode);
+        if(resp1.responseCode=="OK"){
+            document.getElementById("displayOTP").innerHTML="OTP Verified, Registration successful";
+        }
         document.getElementById("displayOTP").innerHTML=resp1.response;
+        
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
     

@@ -18,7 +18,7 @@
         <option>ACTIVE</option>
         <option>INACTIVE</option>    
     </select>
-    <input type="submit">
+    <button id="submitR" onclick="Create()">Submit</button>
     <p id="display"></p>
     <p>OTP: <input type="number", id="OTPinput"></p>
     <button id="validateotp" onclick="OTPvalidation()">Validate OTP</button>
@@ -34,7 +34,7 @@
         var mobileno=document.getElementById("mobileno").value;
         var walletid=document.getElementById("walletid").value;
         var status=document.getElementById("status").value;
-    await fetch("http://localhost:8080/Wallet/ChangeWalletStatus",{
+        fetch("http://localhost:8080/Wallet/ChangeWalletStatus",{
         method:'POST',
         body:JSON.stringify({mobileno: mobileno, walletid: walletid,status: status}),
         headers: headers
