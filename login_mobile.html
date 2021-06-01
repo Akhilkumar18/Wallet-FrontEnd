@@ -7,17 +7,74 @@
     <title>Wallet</title>
     <style>
         div {text-align: center;}
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        .navbar {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color:black;
+            text-color:white;
+            align-items: center;
+            padding: 15px;
+        }
+        .items{
+            text-decoration: none;
+            color:white;
+            margin-right: 50px;
+            margin-left: 20px;
+        }
+
+        .logs{
+            text-align: center;
+            margin-top: 0%;
+            margin-left: 6%;
+            padding: 10px;
+                        
+        }
+        .logs p{
+            margin-top:5px;
+            margin-bottom:10px;
+            font-size: 18px;
+        }
+
+        .button {
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 10px 8px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
-<div>
+    <nav class="navbar">
+        <h1 class="items">FSS WALLET</h1>
+        <div class="nav-links">
+                <a href="#" class="items">Wallet</a>
+                <a href="#" class="items">Payments</a>
+                <a href="#" class="items">Cards</a>
+                <a href="#" class="items">Transactions</a>
+                <a href="#" class="items">My Account</a>
+            
+        </div>
+    </nav>
+<div class="logs">
     <h1>Login with mobile number</h1>
     <p>Mobile No: <input type="text", id="Mobileinput"></p>
     <p>Device id: <input type="text", id="Didinput"></p>
-    <button onclick="Create()">Login</button>
+    <input type="button" class="button" onclick="Create()" value="Login">
+
     <p id="display"></p>
     <p>OTP: <input type="number", id="OTPinput"></p>
-    <button id="validateotp" onclick="OTPvalidation()">Validate OTP</button>
+    <input type="button" class="button" onclick="OTPvalidation()" value="Validate OTP">
+    
     <p id="otpresponse"></p>
     <p id="displayOTP"></p>
     <A HREF = "login.html"><button>Go Back to Login page</button></A>
