@@ -39,7 +39,7 @@
         // console.log({receiverwalletid:receiversList.join(', '), senderwalletid:senderwalletid, deviceid:deviceid , money:amount})
     	fetch("http://localhost:8080/Payment/SendToMultiple",{
             method:'POST',
-            body:JSON.stringify({receiverwalletid:receiversList.join(', '), senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+            body:JSON.stringify({receiverwalletid:receiversList.join(','), senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
             headers: headers
         })
         .then(response => response.json())
