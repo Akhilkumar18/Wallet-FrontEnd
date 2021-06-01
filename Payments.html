@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Payments</title>
+</head>
+<body>
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'TopUp')">Top Up</button>
+  <button class="tablinks" onclick="openCity(event, 'Sendtobank')">Send to bank</button>
+  <button class="tablinks" onclick="openCity(event, 'Sendtofriend')">Send to friend</button>
+  <button class="tablinks" onclick="openCity(event, 'Sendtomultiplefriends')">Send to multiple friends</button>
+</div>
+
+<!-- Tab content -->
+<div id="TopUp" class="tabcontent">
+	<h1>Add From Bank</h1>
+	<p>Wallet id<input type="text" id="walletid1"></p>
+	<p>Card Number<input type="text" id="cardno1"></p>
+	<p>Card Issuer<input type="text" id="cardissuer1"></p>
+	<p>Amount<input type="text" id="amount1"></p>
+	<button onclick="topup()">Make Payment</button>
+	<p id="display"></p>
+</div>
+
+<div id="Sendtobank" class="tabcontent">
+	<h1>Add To Bank</h1>
+	<p>Wallet id<input type="text" id="walletid2"></p>
+	<p>Card Number<input type="text" id="cardno2"></p>
+	<p>Card Issuer<input type="text" id="cardissuer2"></p>
+	<p>Amount<input type="text" id="amount2"></p>
+	<button onclick="bank()">Make Payment</button>
+	<p id="display"></p>
+</div>
+
+<div id="Sendtofriend" class="tabcontent">
+	<h1>Send To Friend</h1>
+	<p>Sender Wallet id<input type="text" id="senderwalletid3"></p>
+	<p>Receiver Wallet id<input type="text" id="receiverwalletid3"></p>
+	<p>Amount<input type="text" id="amount3"></p>
+	<p>Device ID<input type="text" id="deviceid3"></p>
+	<button onclick="friend()">Make Payment</button>
+	<p id="display"></p>
+</div>
+
+<div id="Sendtomultiplefriends" class="tabcontent">
+	<h1>Send To Multiple</h1>
+	<p>Sender Wallet id<input type="text" id="senderwalletid4"></p>
+	<div id='receivers'>
+	    <p>Receiver Wallet ids</p><input type="text" class="receiverwalletid">
+	</div>
+	<p><button id="add-button">Add receiver</button></p>
+	<p>Amount<input type="text" id="amount4"></p>
+	<p>Device ID<input type="text" id="deviceid4"></p>
+	<button onclick="multiple()">Make Payment</button>
+	<p id="display"></p>
+</div>
+
+</body>
+
+<style type="text/css">
+	.tabcontent {
+		display: none;
+		padding: 6px 12px;
+		border: 1px solid #ccc;
+		border-top: none;
+	}
+	button{
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 20px 8px;
+            border-radius: 8px;
+        }
+</style>
+
+<script type="text/javascript">
+	function openCity(evt, cityName) {
+		// Declare all variables
+		var i, tabcontent, tablinks;
+
+		// Get all elements with class="tabcontent" and hide them
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+		  tabcontent[i].style.display = "none";
+		}
+
+		// Get all elements with class="tablinks" and remove the class "active"
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+		  tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+
+		// Show the current tab, and add an "active" class to the button that opened the tab
+		document.getElementById(cityName).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
+	async function topup(){
+        document.getElementById("display").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var cardissuer=document.getElementById("cardissuer1").value;
+        var cardno=document.getElementById("cardno1").value;
+        var walletid=document.getElementById("walletid1").value;
+        var amount=document.getElementById("amount1").value;
+    	fetch("http://localhost:8080/Payment/AddFromBank",{
+        method:'POST',
+        body:JSON.stringify({cardissuer:cardissuer, cardno:cardno, walletid:walletid, amount:amount}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("AddFromBank_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("AddFromBank_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+	async function bank(){
+        document.getElementById("display").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var cardissuer=document.getElementById("cardissuer2").value;
+        var cardno=document.getElementById("cardno2").value;
+        var walletid=document.getElementById("walletid2").value;
+        var amount=document.getElementById("amount2").value;
+    	fetch("http://localhost:8080/Payment/AddToBank",{
+        method:'POST',
+        body:JSON.stringify({cardissuer:cardissuer, cardno:cardno, walletid:walletid, amount:amount}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("AddToBank_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("AddToBank_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+	async function friend(){
+        document.getElementById("display").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var receiverwalletid=document.getElementById("receiverwalletid3").value;
+        var senderwalletid=document.getElementById("senderwalletid3").value;
+        var amount=document.getElementById("amount3").value;
+        var deviceid=document.getElementById("deviceid3").value;
+    	fetch("http://localhost:8080/Payment/SendToFriend",{
+        method:'POST',
+        body:JSON.stringify({receiverwalletid:receiverwalletid, senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("SendToFriend_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("SendToFriend_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+
+	const receivers = document.querySelector('#receivers')
+    document.querySelector("#add-button").addEventListener('click',(e)=> {
+        const newInput = document.createElement('input')
+        newInput.classList.add("receiverwalletid")
+        receivers.appendChild(document.createElement('br'))
+        receivers.appendChild(document.createElement('br'))
+        receivers.appendChild(newInput)
+    })
+
+	async function multiple(){
+        document.getElementById("display").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var receiverwalletid= document.getElementsByClassName("receiverwalletid")
+        let receiversList = []
+        for (let e of receiverwalletid) receiversList.push(e.value);
+        var senderwalletid=document.getElementById("senderwalletid4").value;
+        var amount=document.getElementById("amount4").value;
+        var deviceid=document.getElementById("deviceid4").value;
+        // console.log({receiverwalletid:receiversList.join(', '), senderwalletid:senderwalletid, deviceid:deviceid , money:amount})
+    	fetch("http://localhost:8080/Payment/SendToMultiple",{
+            method:'POST',
+            body:JSON.stringify({receiverwalletid:receiversList.join(','), senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+            headers: headers
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            localStorage.setItem("SendToMultiple_Response", JSON.stringify(json));
+            var resp=JSON.parse(localStorage.getItem("SendToMultiple_Response"));
+            console.log(resp.responseCode);
+            document.getElementById("display").innerHTML=resp.response;
+        })
+        .catch(error => console.log('Authorization failed : ' + error.message));
+}
+
+</script>
+</html>
