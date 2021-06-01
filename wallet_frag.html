@@ -14,7 +14,6 @@
             margin: 0px;
             padding: 0px;
         }
-        .body1 {text-align: center;}
         .navbar {
             display: flex;
             flex-direction: row;
@@ -41,9 +40,38 @@
             margin: 2px 1px;
             border-radius: 8px;
         }
+        .vertical1{
+            border-left: 2px solid black;
+            height: 300px;
+            position:absolute;
+            top: 30%;
+            left: 33%;
+        }
+
+        .vertical2{
+            border-left: 2px solid black;
+            height: 300px;
+            position:absolute;
+            top: 30%;
+            left: 66%;
+        }
+        .wdtablec{
+            text-align: center;
+            margin-top: 2%;
+            margin-left: 3%;
+            
+        }
+        .head1{
+            margin-top: 10%;
+            margin-left: 8%;
+       }
+       .dropd1{
+            margin-top: 1%;
+            margin-left: 6%;
+       }
     </style>
 </head>
-<body>
+<body onload="getallwallets()">
     <nav class="navbar">
         <h1 class="items">FSS WALLET</h1>
         <div class="nav-links">
@@ -55,8 +83,87 @@
             
         </div>
     </nav>
+    <div class = "vertical1"></div>
+    <div class = "vertical2"></div>
     <div class="body1">
-        <h1>Wallet Fragment body</h1>
+        
+        
+    <h1 class="head1">Your Wallets</h1>
+    <p class="dropd1">Status: <select id="status" onchange= "getallwallets()">
+        <option selected>ALL</option>
+        <option>ACTIVE</option>
+        <option>INACTIVE</option>    
+    </select>
+    Order: <select id="order" onchange= "getallwallets()">
+        <option selected>ASC</option>
+        <option>DESC</option>    
+    </select>
+    </p>
+    <div class=wdtablec>
+        
+        <table style="width:25%" class="wdtable" id="wtable1">
+            <tr>
+              <th>Wallet</th>
+              <th>Details</th>
+            </tr>
+        </table>
+    </div>
+    <script>
+    function getallwallets(){
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+        var st=document.getElementById("status").value;
+        var ord=document.getElementById("order").value;
+        var mob=localStorage.getItem("CurrentUser_mobile");
+        console.log(localStorage.getItem("CurrentUser_mobile"));
+        fetch("http://localhost:8080/Wallet/MultipleWalletDetails",{
+            method:'POST',
+            body: JSON.stringify({mobileno: mob, sortby: ord, status:st}),
+            headers: headers
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            var walletslist= json.response;
+            var allwallets = [];
+            for(var k in walletslist) allwallets.push(k);
+            console.log(allwallets);
+            var table1 = document.getElementById("wtable1");
+            var rowCount = table1.rows.length;
+            for (var i = rowCount - 1; i > 0; i--) {
+                table1.deleteRow(i);
+            }
+            var tbody = document.createElement("tbody");
+                if(allwallets.length==0){
+                    var td = document.createElement("td");
+                    var txt = document.createTextNode("No wallets found");
+                    td.appendChild(txt);
+                    tr.appendChild(td);
+                }
+                for (var i = 0 ; i < allwallets.length; i++) {
+                var tr = document.createElement("tr");
+                    var td = document.createElement("td");
+                    var txt = document.createTextNode(allwallets[i]);
+                    td.appendChild(txt);
+                    tr.appendChild(td);
+
+                    var td = document.createElement("td");
+                    var txt = document.createTextNode("view details");
+                    td.appendChild(txt);
+                    tr.appendChild(td);
+
+                tbody.appendChild(tr);
+                console.log(tbody);
+                table1.appendChild(tbody);
+            }
+            console.log(table1)
+            console.log(tbody)
+            
+        })
+        .catch(error => console.log('Authorization failed : ' + error.message));
+    }
+    </script>
         
     </div>
     
