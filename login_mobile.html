@@ -76,7 +76,7 @@
         if(login_mobile_response2.responseCode==="OK"){
         document.getElementById("displayOTP").innerHTML=login_mobile_response2.response;
         localStorage.setItem("CurrentUser_mobile",MN)
-        window.location.href = "home.html";
+        window.location.href = "wallet_frag.html";
 }
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
