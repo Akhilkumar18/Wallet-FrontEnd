@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Payments</title>
+</head>
+<body align="center">
+<h1>Send To Multiple</h1>
+<p>Sender Wallet id<input type="text" id="senderwalletid"></p>
+<div id='receivers'>
+    <p>Receiver Wallet ids</p><input type="text" class="receiverwalletid">
+</div>
+<p><button id="add-button">Add receiver</button></p>
+<p>Amount<input type="text" id="amount"></p>
+<p>Device ID<input type="text" id="deviceid"></p>
+<button onclick="payment()">Make Payment</button>
+<p id="display"></p>
+</body>
+<script type="text/javascript">
+
+    const receivers = document.querySelector('#receivers')
+    document.querySelector("#add-button").addEventListener('click',(e)=> {
+        const newInput = document.createElement('input')
+        newInput.classList.add("receiverwalletid")
+        receivers.appendChild(document.createElement('br'))
+        receivers.appendChild(document.createElement('br'))
+        receivers.appendChild(newInput)
+    })
+
+	async function payment(){
+        document.getElementById("display").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var receiverwalletid= document.getElementsByClassName("receiverwalletid")
+        let receiversList = []
+        for (let e of receiverwalletid) receiversList.push(e.value);
+        var senderwalletid=document.getElementById("senderwalletid").value;
+        var amount=document.getElementById("amount").value;
+        var deviceid=document.getElementById("deviceid").value;
+        // console.log({receiverwalletid:receiversList.join(', '), senderwalletid:senderwalletid, deviceid:deviceid , money:amount})
+    	fetch("http://localhost:8080/Payment/SendToMultiple",{
+            method:'POST',
+            body:JSON.stringify({receiverwalletid:receiversList.join(', '), senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+            headers: headers
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            localStorage.setItem("SendToMultiple_Response", JSON.stringify(json));
+            var resp=JSON.parse(localStorage.getItem("SendToMultiple_Response"));
+            console.log(resp.responseCode);
+            document.getElementById("display").innerHTML=resp.response;
+        })
+        .catch(error => console.log('Authorization failed : ' + error.message));
+}
+</script>
+</html>

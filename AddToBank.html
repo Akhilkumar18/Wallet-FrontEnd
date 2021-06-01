@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Payments</title>
+</head>
+<body align="center">
+<h1>Add To Bank</h1>
+<p>Wallet id<input type="text" id="walletid"></p>
+<p>Card Number<input type="text" id="cardno"></p>
+<p>Card Issuer<input type="text" id="cardissuer"></p>
+<p>Amount<input type="text" id="amount"></p>
+<button onclick="payment()">Make Payment</button>
+<p id="display"></p>
+</body>
+<script type="text/javascript">
+	async function payment(){
+        document.getElementById("display").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var cardissuer=document.getElementById("cardissuer").value;
+        var cardno=document.getElementById("cardno").value;
+        var walletid=document.getElementById("walletid").value;
+        var amount=document.getElementById("amount").value;
+    	fetch("http://localhost:8080/Payment/AddToBank",{
+        method:'POST',
+        body:JSON.stringify({cardissuer:cardissuer, cardno:cardno, walletid:walletid, amount:amount}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("AddToBank_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("AddToBank_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+</script>
+</html>

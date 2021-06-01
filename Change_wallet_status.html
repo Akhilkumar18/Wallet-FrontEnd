@@ -10,7 +10,6 @@
     </style>
 </head>
 <body>
-<form>
     <h1>Change Wallet Status</h1>
     <p>Mobile No: <input type="text", id="mobileno"></p>
     <p>WalletID: <input type="text", id="walletid"></p>
@@ -18,9 +17,8 @@
         <option>ACTIVE</option>
         <option>INACTIVE</option>    
     </select></p>
-    <button id="submitR" onclick="Create()">Submit</button>
+    <button id="submit" onclick="Create()">Submit</button>
     <p id="display"></p>
-</form>
     <p>OTP: <input type="number", id="OTPinput"></p>
     <button id="validateotp" onclick="OTPvalidation()">Validate OTP</button>
     <p id="otpresponse"></p>
@@ -74,7 +72,7 @@
     }
 
 
-document.querySelector('form').addEventListener('submit', (e) => {
+/*document.querySelector('form').addEventListener('submit', (e) => {
     e.preventDefault();
     var numbers = /^[0-9]+$/;
     var mobileno=document.getElementById("mobileno").value;
@@ -82,6 +80,6 @@ document.querySelector('form').addEventListener('submit', (e) => {
     if(!mobileno.match(numbers)) return alert("Only numbers allowed");
     if(walletid.length!=14) return alert("Incorrect walletid");
     Create();
-})
+})*/
 </script>
 </html>
