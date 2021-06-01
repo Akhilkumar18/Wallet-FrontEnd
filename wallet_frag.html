@@ -62,13 +62,25 @@
             
         }
         .head1{
-            margin-top: 10%;
+            margin-top: 8%;
             margin-left: 8%;
        }
        .dropd1{
             margin-top: 1%;
             margin-left: 6%;
        }
+       .button {
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 20px 8px;
+            border-radius: 8px;
+            margin-left: 11.5%;
+        }
     </style>
 </head>
 <body onload="getallwallets()">
@@ -103,11 +115,14 @@
         
         <table style="width:25%" class="wdtable" id="wtable1">
             <tr>
-              <th>Wallet</th>
-              <th>Details</th>
+              <th>Wallet iD's</th>
             </tr>
         </table>
     </div>
+    <input type="button" class="button" onclick="location.href='wallet_details.html'" value="View Details">
+
+    
+
     <script>
     function getallwallets(){
         let headers = new Headers();
@@ -128,6 +143,7 @@
             var walletslist= json.response;
             var allwallets = [];
             for(var k in walletslist) allwallets.push(k);
+            localStorage.setItem("CurrentUserAllWallets",allwallets);
             console.log(allwallets);
             var table1 = document.getElementById("wtable1");
             var rowCount = table1.rows.length;
@@ -145,11 +161,6 @@
                 var tr = document.createElement("tr");
                     var td = document.createElement("td");
                     var txt = document.createTextNode(allwallets[i]);
-                    td.appendChild(txt);
-                    tr.appendChild(td);
-
-                    var td = document.createElement("td");
-                    var txt = document.createTextNode("view details");
                     td.appendChild(txt);
                     tr.appendChild(td);
 
