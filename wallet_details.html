@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Wallet</title>
+    <style>
+        
+    </style>
+    <style>
+    
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        .navbar {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color:black;
+            text-color:white;
+            align-items: center;
+            padding: 15px;
+        }
+        .items{
+            text-decoration: none;
+            color:white;
+            margin-right: 50px;
+            margin-left: 20px;
+        }
+        .button {
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 2px 1px;
+            border-radius: 8px;
+        }
+        .vertical1{
+            border-left: 2px solid black;
+            height: 300px;
+            position:absolute;
+            top: 30%;
+            left: 33%;
+        }
+
+        .vertical2{
+            border-left: 2px solid black;
+            height: 300px;
+            position:absolute;
+            top: 30%;
+            left: 66%;
+        }
+       .button {
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 20px 8px;
+            border-radius: 8px;
+            margin-left: 11.5%;
+        }
+        .headi{
+            text-align: center;
+            margin-top: 4%;
+            
+        }
+        .balance{
+            margin-top:10%;
+            text-align: center;
+        }
+        .changest{
+            text-align: left;
+            margin-top: -10%;
+            margin-left: 6%;
+            padding: 10px;
+                        
+        }
+        .changest p{
+            margin-top:5px;
+            margin-bottom:10px;
+            font-size: 18px;
+        }
+        .cws{
+            margin-bottom: 30px;
+        }
+
+        .button {
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 20px 8px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body">
+    <nav class="navbar">
+        <h1 class="items">FSS WALLET</h1>
+        <div class="nav-links">
+                <a href="#" class="items">Wallet</a>
+                <a href="#" class="items">Payments</a>
+                <a href="#" class="items">Cards</a>
+                <a href="#" class="items">Transactions</a>
+                <a href="#" class="items">My Account</a>
+            
+        </div>
+    </nav>
+    <div class = "vertical1"></div>
+    <div class = "vertical2"></div>
+    <div class ="headi">
+        <h3 id="dropd1">Select Wallet: <select id="wallets" onchange= "getwalletdetails()">       
+        </select>
+        </h3>
+    </div>
+    <div class="balance">    
+        <h2 id=wbalance>Balance</h2>
+    </div>
+    <div class="changest">
+        <h2 class="cws">Wallet Status</h2>
+        <h3 id="cstatus"></h3>
+        <button class="button" id="submit" onclick="Create()"></button>
+        <p id="display"></p>
+        <p>OTP: <input type="number", id="OTPinput"></p>
+        <button class="button" id="validateotp" onclick="OTPvalidation()">Validate OTP</button>
+        <p id="otpresponse"></p>
+        <p id="displayOTP"></p>
+    </div>
+    <script>
+            console.log(localStorage.getItem("CurrentUserAllWallets"));
+            var walts=document.getElementById("wallets");
+            var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+            walts.value=allwallets[0];
+            for (var i = 0 ; i < allwallets.length; i++) {
+                var option = document.createElement("option");
+                option.text = allwallets[i];
+                walts.add(option, walts[0]);
+            }
+            getwalletdetails();
+            function getwalletdetails(){
+                var selectedwallet=walts.options[walts.selectedIndex].text;
+                console.log(selectedwallet);
+                let headers = new Headers();
+                headers.append('Content-Type', 'application/json');
+                headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+                console.log(localStorage.getItem("CurrentUser_mobile"));
+                fetch("http://localhost:8080/Wallet/GetWalletBalance",{
+                    method:'POST',
+                    body: JSON.stringify({walletid:selectedwallet}),
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json)
+                    var walletB= json.response;
+                    document.getElementById("wbalance").innerHTML="Balance-"+walletB;                        
+                })
+                .catch(error => console.log('Authorization failed : ' + error.message));
+
+
+                fetch("http://localhost:8080/Wallet/SingleWalletDetails",{
+                    method:'POST',
+                    body: JSON.stringify({walletid:selectedwallet}),
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(json => {
+                    var walletst= json.response.status;
+                    console.log(walletst)
+                    document.getElementById("cstatus").innerHTML=walletst;   
+                    if(walletst=="ACTIVE"){
+                        document.getElementById("submit").innerHTML="Make "+"INACTIVE"; 
+                    }else{
+                        document.getElementById("submit").innerHTML="Make "+"ACTIVE"; 
+                    }                  
+                })
+                .catch(error => console.log('Authorization failed : ' + error.message));
+            }
+
+            async function Create(){
+                var selectedwallet=walts.options[walts.selectedIndex].text;
+                var tocs="";   
+                    if(document.getElementById("cstatus")=="ACTIVE"){
+                        tocs="INACTIVE";
+                    }else{
+                        tocs="ACTIVE"
+                    }   
+                document.getElementById("display").innerHTML="";
+                let headers = new Headers();
+                headers.append('Content-Type', 'application/json');
+                var mobileno=localStorage.getItem("CurrentUser_mobile")
+                fetch("http://localhost:8080/Wallet/ChangeWalletStatus",{
+                method:'POST',
+                body:JSON.stringify({mobileno: mobileno, walletid: selectedwallet,status: tocs}),
+                headers: headers
+            })
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);
+                localStorage.setItem("change_wallet_Mobile_Response", JSON.stringify(json));
+                var resp=JSON.parse(localStorage.getItem("change_wallet_Mobile_Response"));
+                console.log(resp.responseCode);
+                document.getElementById("display").innerHTML=resp.response;
+            })
+            .catch(error => console.log('Authorization failed : ' + error.message));
+        }
+
+
+        async function OTPvalidation(){
+            document.getElementById("displayOTP").innerHTML="";
+            let headers = new Headers();
+
+            headers.append('Content-Type', 'application/json');
+            var MN=localStorage.getItem("CurrentUser_mobile")
+            var otpin=document.getElementById("OTPinput").value;
+            fetch("http://localhost:8080/User/ValidateOTP",{
+            method:'POST',
+            body:JSON.stringify({mobileno: MN, otp: otpin}),
+            headers: headers
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            localStorage.setItem("change_wallet_OTP_Response", JSON.stringify(json));
+            var resp1=JSON.parse(localStorage.getItem("change_wallet_OTP_Response"));
+            console.log(resp1.responseCode);
+            document.getElementById("displayOTP").innerHTML=resp1.response;
+            if(resp1.responseCode=="OK"){
+                if(document.getElementById("cstatus")=="ACTIVE"){
+                    document.getElementById("cstatus").innerHTML="INACTIVE";
+                    }else{
+                        document.getElementById("cstatus").innerHTML="ACTIVE"
+                }   
+            }
+            if(document.getElementById("cstatus")=="ACTIVE"){
+                        document.getElementById("submit").innerHTML="Make "+"INACTIVE"; 
+                    }else{
+                        document.getElementById("submit").innerHTML="Make "+"ACTIVE"; 
+                    }  
+        })
+        .catch(error => console.log('Authorization failed : ' + error.message));
+        }
+
+
+
+    
+    </script>
+        
+    </div>
+    
+</body>
+</html>
