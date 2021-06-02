@@ -19,7 +19,7 @@
 	<p>Card Issuer<input type="text" id="cardissuer1"></p>
 	<p>Amount<input type="text" id="amount1"></p>
 	<button onclick="topup()">Make Payment</button>
-	<p id="display"></p>
+	<p id="display1"></p>
 </div>
 
 <div id="Sendtobank" class="tabcontent">
@@ -29,7 +29,7 @@
 	<p>Card Issuer<input type="text" id="cardissuer2"></p>
 	<p>Amount<input type="text" id="amount2"></p>
 	<button onclick="bank()">Make Payment</button>
-	<p id="display"></p>
+	<p id="display2"></p>
 </div>
 
 <div id="Sendtofriend" class="tabcontent">
@@ -39,7 +39,7 @@
 	<p>Amount<input type="text" id="amount3"></p>
 	<p>Device ID<input type="text" id="deviceid3"></p>
 	<button onclick="friend()">Make Payment</button>
-	<p id="display"></p>
+	<p id="display3"></p>
 </div>
 
 <div id="Sendtomultiplefriends" class="tabcontent">
@@ -52,7 +52,7 @@
 	<p>Amount<input type="text" id="amount4"></p>
 	<p>Device ID<input type="text" id="deviceid4"></p>
 	<button onclick="multiple()">Make Payment</button>
-	<p id="display"></p>
+	<p id="display4"></p>
 </div>
 
 </body>
@@ -117,7 +117,7 @@
         localStorage.setItem("AddFromBank_Response", JSON.stringify(json));
         var resp=JSON.parse(localStorage.getItem("AddFromBank_Response"));
         console.log(resp.responseCode);
-        document.getElementById("display").innerHTML=resp.response;
+        document.getElementById("display1").innerHTML=resp.response;
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
 }
@@ -140,7 +140,7 @@
         localStorage.setItem("AddToBank_Response", JSON.stringify(json));
         var resp=JSON.parse(localStorage.getItem("AddToBank_Response"));
         console.log(resp.responseCode);
-        document.getElementById("display").innerHTML=resp.response;
+        document.getElementById("display2").innerHTML=resp.response;
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
 }
@@ -163,7 +163,7 @@
         localStorage.setItem("SendToFriend_Response", JSON.stringify(json));
         var resp=JSON.parse(localStorage.getItem("SendToFriend_Response"));
         console.log(resp.responseCode);
-        document.getElementById("display").innerHTML=resp.response;
+        document.getElementById("display3").innerHTML=resp.response;
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
 }
@@ -199,7 +199,7 @@
             localStorage.setItem("SendToMultiple_Response", JSON.stringify(json));
             var resp=JSON.parse(localStorage.getItem("SendToMultiple_Response"));
             console.log(resp.responseCode);
-            document.getElementById("display").innerHTML=resp.response;
+            document.getElementById("display4").innerHTML=resp.response;
         })
         .catch(error => console.log('Authorization failed : ' + error.message));
 }
