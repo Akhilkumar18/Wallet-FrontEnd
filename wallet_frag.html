@@ -140,23 +140,29 @@
         .then(response => response.json())
         .then(json => {
             console.log(json)
-            var walletslist= json.response;
+            var table1 = document.getElementById("wtable1");
+            var tbody = document.createElement("tbody")
             var allwallets = [];
+            if(json.responseCode!="OK"){
+                var tr = document.createElement("tr");
+                var td = document.createElement("td");
+                var txt = document.createTextNode("No wallets found");
+                td.appendChild(txt);
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+                table1.appendChild(tbody);
+                console.log(allwallets);
+                localStorage.setItem("CurrentUserAllWallets",allwallets);
+            }
+            else{
+                var walletslist= json.response;
             for(var k in walletslist) allwallets.push(k);
             localStorage.setItem("CurrentUserAllWallets",allwallets);
             console.log(allwallets);
-            var table1 = document.getElementById("wtable1");
             var rowCount = table1.rows.length;
             for (var i = rowCount - 1; i > 0; i--) {
                 table1.deleteRow(i);
             }
-            var tbody = document.createElement("tbody");
-                if(allwallets.length==0){
-                    var td = document.createElement("td");
-                    var txt = document.createTextNode("No wallets found");
-                    td.appendChild(txt);
-                    tr.appendChild(td);
-                }
                 for (var i = 0 ; i < allwallets.length; i++) {
                 var tr = document.createElement("tr");
                     var td = document.createElement("td");
@@ -170,6 +176,7 @@
             }
             console.log(table1)
             console.log(tbody)
+        }
             
         })
         .catch(error => console.log('Authorization failed : ' + error.message));

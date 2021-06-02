@@ -73,12 +73,22 @@
             
         }
         .balance{
-            margin-top:10%;
+            margin-top:8%;
             text-align: center;
         }
+        .balance h2{
+            margin-top: 5px;
+        }
+
+        .balance p{
+            margin-top:15px;
+            margin-bottom:10px;
+            font-size: 18px;
+        }
+
         .changest{
             text-align: left;
-            margin-top: -10%;
+            margin-top: -24%;
             margin-left: 6%;
             padding: 10px;
                         
@@ -103,6 +113,10 @@
             margin: 20px 8px;
             border-radius: 8px;
         }
+        .hline{
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -124,8 +138,21 @@
         </select>
         </h3>
     </div>
-    <div class="balance">    
-        <h2 id=wbalance>Balance</h2>
+    <div class="balance"> 
+        <h3>Balance</h2>   
+        <h2 id=wbalance></h2>
+        <hr class="hline" style="width:15%;text-align:lcenter;margin-left:42%">
+        <h2>Create New Wallet</h2>
+        <p>Currency: <select id="curr">
+            <option selected>INR</option>
+            <option>USD</option>    
+        </select>
+        <p>Status: <select id="status">
+            <option selected>ACTIVE</option>
+            <option>INACTIVE</option>    
+        </select>
+        <button class="button" id="cw" onclick="createwallet()">Create</button>
+        <p id="display1"></p>
     </div>
     <div class="changest">
         <h2 class="cws">Wallet Status</h2>
@@ -138,17 +165,30 @@
         <p id="displayOTP"></p>
     </div>
     <script>
-            console.log(localStorage.getItem("CurrentUserAllWallets"));
-            var walts=document.getElementById("wallets");
-            var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
-            walts.value=allwallets[0];
-            for (var i = 0 ; i < allwallets.length; i++) {
-                var option = document.createElement("option");
-                option.text = allwallets[i];
-                walts.add(option, walts[0]);
-            }
             getwalletdetails();
             function getwalletdetails(){
+                var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+                console.log(allwallets);
+
+                console.log(localStorage.getItem("CurrentUserAllWallets").length);
+                if(localStorage.getItem("CurrentUserAllWallets").length==0){
+                    var option = document.createElement("option");
+                    option.text = "No wallets found";
+                    walts.add(option, walts[0]);
+                    document.getElementById("wbalance").innerHTML="Create wallet to start your payments";
+                    document.getElementById("cstatus").innerHTML="No wallet found"; 
+                    document.getElementById("submit").innerHTML="Select a wallet"; 
+                }else{
+                    walts.value=allwallets[0];
+                    for (var i = 0 ; i < allwallets.length; i++) {
+                    var option = document.createElement("option");
+                    option.text = allwallets[i];
+                    walts.add(option, walts[0]);
+                }
+            
+
+
+
                 var selectedwallet=walts.options[walts.selectedIndex].text;
                 console.log(selectedwallet);
                 let headers = new Headers();
@@ -164,7 +204,7 @@
                 .then(json => {
                     console.log(json)
                     var walletB= json.response;
-                    document.getElementById("wbalance").innerHTML="Balance-"+walletB;                        
+                    document.getElementById("wbalance").innerHTML=walletB;                        
                 })
                 .catch(error => console.log('Authorization failed : ' + error.message));
 
@@ -177,7 +217,6 @@
                 .then(response => response.json())
                 .then(json => {
                     var walletst= json.response.status;
-                    console.log(walletst)
                     document.getElementById("cstatus").innerHTML=walletst;   
                     if(walletst=="ACTIVE"){
                         document.getElementById("submit").innerHTML="Make "+"INACTIVE"; 
@@ -186,6 +225,7 @@
                     }                  
                 })
                 .catch(error => console.log('Authorization failed : ' + error.message));
+            }
             }
 
             async function Create(){
@@ -237,7 +277,7 @@
             localStorage.setItem("change_wallet_OTP_Response", JSON.stringify(json));
             var resp1=JSON.parse(localStorage.getItem("change_wallet_OTP_Response"));
             console.log(resp1.responseCode);
-            document.getElementById("displayOTP").innerHTML=resp1.response;
+            alert(resp1.response);
             if(resp1.responseCode=="OK"){
                 if(document.getElementById("cstatus").innerHTML=="ACTIVE"){
                     document.getElementById("cstatus").innerHTML="INACTIVE";
@@ -255,9 +295,39 @@
         .catch(error => console.log('Authorization failed : ' + error.message));
         }
 
+        async function createwallet(){
+            document.getElementById("display").innerHTML="";
+            var resp
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            var MN=localStorage.getItem("CurrentUser_mobile");
+            var curren=curr.options[curr.selectedIndex].text;
+            var wstat=curr.options[curr.selectedIndex].text;
+            var currencys=document.getElementById("curr").value;
+            var statuss=document.getElementById("status").value;
+        await fetch("http://localhost:8080/Wallet/CreateWallet",{
+            method:'PUT',
+            body:JSON.stringify({mobileno: MN, currency: currencys,status: statuss}),
+            headers: headers
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            resp = json
+        })
+        .catch(error => console.log('Authorization failed : ' + error.message));
+        console.log(resp.responseCode)
+        if(resp.responseCode==="OK"){
+            //alert('Created');
+            document.getElementById("display1").innerHTML=resp.response;
+            getwalletdetails();
+            window.location.href = "wallet_frag.html";
+        }
+        else{
+            document.getElementById("display1").innerHTML=resp.response;
+        }
+        }
 
-
-    
     </script>
         
     </div>
