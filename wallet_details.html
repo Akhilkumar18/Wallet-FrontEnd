@@ -222,6 +222,8 @@
 
     <script>
             var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+            var wallnames=localStorage.getItem("CurrentUserWalletsnames").split(",");
+            console.log(wallnames);
                 console.log(allwallets);
                 document.getElementById("wallets").innerHTML="";
                 var walts=document.getElementById("wallets");
@@ -237,15 +239,14 @@
                     walts.value=allwallets[0];
                     for (var i = 0 ; i < allwallets.length; i++) {
                         var option = document.createElement("option");
-                        option.text = allwallets[i];
+                        option.text = wallnames[i];
                         walts.add(option, walts[0]);
                     }
                     getwalletdetails();
                 }
             function getwalletdetails(){         
                 var walts=document.getElementById("wallets");
-
-                var selectedwallet=walts.options[walts.selectedIndex].text;
+                var selectedwallet=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
                 console.log(selectedwallet);
                 let headers = new Headers();
                 headers.append('Content-Type', 'application/json');
@@ -331,7 +332,7 @@
             }
 
             async function Create(){
-                var selectedwallet=walts.options[walts.selectedIndex].text;
+                var selectedwallet=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
                 var tocs="";   
                 console.log(document.getElementById("cstatus").innerHTML);
                     if(document.getElementById("cstatus").innerHTML=="ACTIVE"){

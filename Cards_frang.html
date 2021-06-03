@@ -212,6 +212,7 @@
 </div>
 <script>
     var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+    var wallnames=localStorage.getItem("CurrentUserWalletsnames").split(",");
     console.log(allwallets);
     document.getElementById("wallets").innerHTML="";
     var walts=document.getElementById("wallets");
@@ -225,7 +226,7 @@
         walts.value=allwallets[0];
         for (var i = 0 ; i < allwallets.length; i++) {
             var option = document.createElement("option");
-            option.text = allwallets[i];
+            option.text = wallnames[i];
             walts.add(option, walts[0]);
         }
         getCards();
@@ -240,7 +241,7 @@
         var walts=document.getElementById("wallets");
         document.getElementById("cardd").innerHTML="";
         var cardss=document.getElementById("cardd");
-        var swalletid=walts.options[walts.selectedIndex].text;
+        var swalletid=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
         console.log(swalletid);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -257,6 +258,7 @@
                     if(cardsst.length===1){
                         var option = document.createElement("option");
                             option.text = "No Cards Linked";
+                            document.getElementById("wbalance").innerHTML="No Card Selected";
                             cardss.add(option, cardss[0]);
                     }else{
                         cardss.value= "**** **** **** "+cardsst[0]+","+cardsst[1];
@@ -275,7 +277,7 @@
     async function getCardDetails(){
         var walts=document.getElementById("wallets");
         var cardss=document.getElementById("cardd");
-        var swalletid=walts.options[walts.selectedIndex].text;
+        var swalletid=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
         var scard=(cardss.options[cardss.selectedIndex].text).toString().split(",");
         console.log(swalletid,scard);
         let headers = new Headers();
@@ -299,7 +301,7 @@
     async function Delink(){
         var walts=document.getElementById("wallets");
         var cardss=document.getElementById("cardd");
-        var swalletid=walts.options[walts.selectedIndex].text;
+        var swalletid=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
         var scard=(cardss.options[cardss.selectedIndex].text).toString().split(",");
         console.log(swalletid,scard);
         let headers = new Headers();
@@ -329,7 +331,7 @@
         var card_number=document.getElementById("card_number").value;
         var cvv=document.getElementById("cvv").value;
         var expiry=document.getElementById("expiry").value;
-        var walletid=walts.options[walts.selectedIndex].text;
+        var walletid=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
     	fetch("http://localhost:8080/Wallet/LinkCard",{
         method:'POST',
         body:JSON.stringify({cardissuer:card_issuer, cardno:card_number, cvv:cvv, expiry:expiry, walletid: walletid}),
