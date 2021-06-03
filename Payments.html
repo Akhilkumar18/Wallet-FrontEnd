@@ -14,7 +14,8 @@
 <!-- Tab content -->
 <div id="TopUp" class="tabcontent">
 	<h1>Add From Bank</h1>
-	<p>Wallet id<input type="text" id="walletid1"></p>
+	<p>Select Wallet: <select id="wallets"></select>
+	</p>
 	<p>Card Number<input type="text" id="cardno1"></p>
 	<p>Card Issuer<input type="text" id="cardissuer1"></p>
 	<p>Amount<input type="text" id="amount1"></p>
@@ -24,7 +25,8 @@
 
 <div id="Sendtobank" class="tabcontent">
 	<h1>Add To Bank</h1>
-	<p>Wallet id<input type="text" id="walletid2"></p>
+	<p>Select Wallet: <select id="wallets"></select>
+	</p>
 	<p>Card Number<input type="text" id="cardno2"></p>
 	<p>Card Issuer<input type="text" id="cardissuer2"></p>
 	<p>Amount<input type="text" id="amount2"></p>
@@ -34,7 +36,8 @@
 
 <div id="Sendtofriend" class="tabcontent">
 	<h1>Send To Friend</h1>
-	<p>Sender Wallet id<input type="text" id="senderwalletid3"></p>
+	<p>Select Wallet: <select id="wallets"></select>
+	</p>
 	<p>Receiver Wallet id<input type="text" id="receiverwalletid3"></p>
 	<p>Amount<input type="text" id="amount3"></p>
 	<p>Device ID<input type="text" id="deviceid3"></p>
@@ -78,6 +81,43 @@
 </style>
 
 <script type="text/javascript">
+	console.log(localStorage.getItem("CurrentUserAllWallets"));
+            var walts=document.getElementById("wallets");
+            var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+            walts.value=allwallets[0];
+            for (var i = 0 ; i < allwallets.length; i++) {
+                var option = document.createElement("option");
+                option.text = allwallets[i];
+                walts.add(option, walts[0]);
+            }
+	console.log(localStorage.getItem("CurrentUserAllWallets"));
+            var walts=document.getElementById("wallets");
+            var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+            walts.value=allwallets[0];
+            for (var i = 0 ; i < allwallets.length; i++) {
+                var option = document.createElement("option");
+                option.text = allwallets[i];
+                walts.add(option, walts[0]);
+            }
+    console.log(localStorage.getItem("CurrentUserAllWallets"));
+            var walts=document.getElementById("wallets");
+            var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+            walts.value=allwallets[0];
+            for (var i = 0 ; i < allwallets.length; i++) {
+                var option = document.createElement("option");
+                option.text = allwallets[i];
+                walts.add(option, walts[0]);
+            }
+	console.log(localStorage.getItem("CurrentUserAllWallets"));
+            var walts=document.getElementById("wallets");
+            var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+            walts.value=allwallets[0];
+            for (var i = 0 ; i < allwallets.length; i++) {
+                var option = document.createElement("option");
+                option.text = allwallets[i];
+                walts.add(option, walts[0]);
+            }            
+
 	function openCity(evt, cityName) {
 		// Declare all variables
 		var i, tabcontent, tablinks;
