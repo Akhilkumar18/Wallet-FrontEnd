@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login to Wallet</title>
+	<style>
+		*{
+		            margin: 0px;
+		            padding: 0px;
+		        }
+		        .navbar {
+		            display: flex;
+		            flex-direction: row;
+		            justify-content: space-between;
+		            background-color:black;
+		            text-color:white;
+		            align-items: center;
+		            padding: 15px;
+		        }
+		        .items{
+		            text-decoration: none;
+		            color:white;
+		            margin-right: 50px;
+		            margin-left: 20px;
+		        }
+		        .button {
+		            background-color:#3f3f3f; 
+		            color: white;
+		            padding: 8px;
+		            text-align: center;
+		            text-decoration: none;
+		            display: inline-block;
+		            font-size: 14px;
+		            margin: 2px 1px;
+		            border-radius: 8px;
+		        }
+		        .vertical1{
+		            border-left: 2px solid black;
+		            height: 300px;
+		            position:absolute;
+		            top: 30%;
+		            left: 33%;
+		        }
+		
+		        .vertical2{
+		            border-left: 2px solid black;
+		            height: 300px;
+		            position:absolute;
+		            top: 30%;
+		            left: 66%;
+		        }
+		       .button {
+		            background-color:#3f3f3f; 
+		            color: white;
+		            padding: 8px;
+		            text-align: center;
+		            text-decoration: none;
+		            display: inline-block;
+		            font-size: 14px;
+		            margin: 20px 8px;
+		            border-radius: 8px;
+		            margin-left: 11.5%;
+		        }
+		        .headi{
+		            text-align: center;
+		            margin-top: 4%;
+		            
+		        }
+		        .balance{
+		            display: flex;
+		            flex-direction: column;
+		            justify-content: center;
+		            align-items: center;
+		            
+		        }
+		        .balance h2{
+		            margin-top: 5px;
+		        }
+		
+		        .balance p{
+		            margin-top:15px;
+		            margin-bottom:10px;
+		            font-size: 18px;
+		        }
+		
+		        .changest{
+		            
+		            padding: 10px;
+		                        
+		        }
+		        .changest p{
+		            margin-top:5px;
+		            margin-bottom:10px;
+		            font-size: 18px;
+		        }
+		
+		        .cardsl{
+		            display: flex;
+		            flex-direction: column;
+		
+		                        
+		        }
+		        .cardsl h2{
+		            margin-bottom: 20px;
+		        }
+		
+		        .cdtable{
+		            text-align: right;
+		        }
+		
+		        .cws{
+		            margin-bottom: 30px;
+		        }
+		
+		        .button {
+		            background-color:#3f3f3f; 
+		            color: white;
+		            padding: 8px;
+		            text-align: center;
+		            text-decoration: none;
+		            display: inline-block;
+		            font-size: 14px;
+		            margin: 20px 8px;
+		            border-radius: 8px;
+		        }
+		        .hline{
+		            margin-top: 40px;
+		            margin-bottom: 20px;
+		        }
+		
+		        .totalc{
+		            display:flex;
+		            flex-direction: row;
+		            margin-top: 60px;
+		            width: 80%;
+		            justify-content: space-between;
+		
+		        }
+		
+		        .totaltotalc{
+		            display:flex;
+		            justify-content: center;
+		        }
+
+                p{
+                    margin: 10px 0;
+                }
+	</style>
+</head>
+
+<body>
+	<nav class="navbar">
+		<h1 class="items">FSS WALLET</h1>
+		<div class="nav-links"> <a href="#" class="items">Wallet</a>
+			<a href="#" class="items">Payments</a>
+			<a href="#" class="items">Cards</a>
+			<a href="#" class="items">Transactions</a>
+			<a href="#" class="items">My Account</a>
+		</div>
+	</nav>
+	<div class="headi">
+		<h3 id="dropd1">Select Wallet: <select id="wallets" onchange= "getwalletdetails()">       
+        </select>
+        </h3>
+	</div>
+	<div class="totaltotalc">
+		<div class="totalc">
+			<div class="AddFronBank">
+				<h1>Add From Bank</h1>
+                <p>Card Number<input type="text" id="cardno1"></p>
+                <p>Card Issuer<input type="text" id="cardissuer1"></p>
+                <p>Amount<input type="text" id="amount1"></p>
+                <button onclick="topup()">Make Payment</button>
+                <p id="display1"></p>
+			</div>
+
+			<hr class="vertical1">
+			<hr class="vertical2">
+
+			<div class="AddToBank">
+                <h1>Add To Bank</h1>
+                <p>Card Number<input type="text" id="cardno2"></p>
+                <p>Card Issuer<input type="text" id="cardissuer2"></p>
+                <p>Amount<input type="text" id="amount2"></p>
+                <button onclick="bank()">Make Payment</button>
+                <p id="display2"></p>
+            </div>
+
+            <div class="SendToFriend">
+                <h2>Send To Friend</h2>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    console.log(localStorage.getItem("CurrentUserAllWallets"));
+    var walts=document.getElementById("wallets");
+    var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+    walts.value=allwallets[0];
+    for (var i = 0 ; i < allwallets.length; i++) {
+        var option = document.createElement("option");
+        option.text = allwallets[i];
+        walts.add(option, walts[0]);
+    }
+
+    async function topup(){
+        document.getElementById("display1").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var cardissuer=document.getElementById("cardissuer1").value;
+        var cardno=document.getElementById("cardno1").value;
+        var walletid=document.getElementById("wallets").value;
+        var amount=document.getElementById("amount1").value;
+        fetch("http://localhost:8080/Payment/AddFromBank",{
+        method:'POST',
+        body:JSON.stringify({cardissuer:cardissuer, cardno:cardno, walletid:walletid, amount:amount}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("AddFromBank_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("AddFromBank_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display1").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+    async function bank(){
+        document.getElementById("display2").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var cardissuer=document.getElementById("cardissuer2").value;
+        var cardno=document.getElementById("cardno2").value;
+        var walletid=document.getElementById("wallets").value;
+        var amount=document.getElementById("amount2").value;
+        fetch("http://localhost:8080/Payment/AddToBank",{
+        method:'POST',
+        body:JSON.stringify({cardissuer:cardissuer, cardno:cardno, walletid:walletid, amount:amount}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("AddToBank_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("AddToBank_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display2").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+    async function friend(){
+        document.getElementById("display3").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var receiverwalletid=document.getElementById("receiverwalletid3").value;
+        var senderwalletid=document.getElementById("senderwalletid3").value;
+        var amount=document.getElementById("amount3").value;
+        var deviceid=document.getElementById("deviceid3").value;
+        fetch("http://localhost:8080/Payment/SendToFriend",{
+        method:'POST',
+        body:JSON.stringify({receiverwalletid:receiverwalletid, senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("SendToFriend_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("SendToFriend_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display3").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+
+    const receivers = document.querySelector('#receivers')
+    document.querySelector("#add-button").addEventListener('click',(e)=> {
+        const newInput = document.createElement('input')
+        newInput.classList.add("receiverwalletid")
+        receivers.appendChild(document.createElement('br'))
+        receivers.appendChild(document.createElement('br'))
+        receivers.appendChild(newInput)
+    })
+
+    async function multiple(){
+        document.getElementById("display4").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var receiverwalletid= document.getElementsByClassName("receiverwalletid")
+        let receiversList = []
+        for (let e of receiverwalletid) receiversList.push(e.value);
+        var senderwalletid=document.getElementById("senderwalletid4").value;
+        var amount=document.getElementById("amount4").value;
+        var deviceid=document.getElementById("deviceid4").value;
+        // console.log({receiverwalletid:receiversList.join(', '), senderwalletid:senderwalletid, deviceid:deviceid , money:amount})
+        fetch("http://localhost:8080/Payment/SendToMultiple",{
+            method:'POST',
+            body:JSON.stringify({receiverwalletid:receiversList.join(','), senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+            headers: headers
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            localStorage.setItem("SendToMultiple_Response", JSON.stringify(json));
+            var resp=JSON.parse(localStorage.getItem("SendToMultiple_Response"));
+            console.log(resp.responseCode);
+            document.getElementById("display4").innerHTML=resp.response;
+        })
+        .catch(error => console.log('Authorization failed : ' + error.message));
+}
+
+</script>
+
+</html>
