@@ -73,8 +73,11 @@
             
         }
         .balance{
-            margin-top:8%;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
         }
         .balance h2{
             margin-top: 5px;
@@ -87,9 +90,7 @@
         }
 
         .changest{
-            text-align: left;
-            margin-top: -24%;
-            margin-left: 6%;
+            
             padding: 10px;
                         
         }
@@ -98,6 +99,21 @@
             margin-bottom:10px;
             font-size: 18px;
         }
+
+        .cardsl{
+            display: flex;
+            flex-direction: column;
+
+                        
+        }
+        .cardsl h2{
+            margin-bottom: 20px;
+        }
+
+        .cdtable{
+            text-align: right;
+        }
+
         .cws{
             margin-bottom: 30px;
         }
@@ -117,9 +133,29 @@
             margin-top: 40px;
             margin-bottom: 20px;
         }
+
+        .totalc{
+            display:flex;
+            flex-direction: row;
+            margin-top: 60px;
+            width: 80%;
+            justify-content: space-between;
+
+        }
+
+        .totaltotalc{
+            display:flex;
+            justify-content: center;
+        }
+
+
+    
+        
+        
     </style>
 </head>
 <body>
+    
     <nav class="navbar">
         <h1 class="items">FSS WALLET</h1>
         <div class="nav-links">
@@ -131,44 +167,67 @@
             
         </div>
     </nav>
-    <div class = "vertical1"></div>
-    <div class = "vertical2"></div>
+
+
+
     <div class ="headi">
         <h3 id="dropd1">Select Wallet: <select id="wallets" onchange= "getwalletdetails()">       
         </select>
         </h3>
     </div>
-    <div class="balance"> 
-        <h3>Balance</h2>   
-        <h2 id=wbalance></h2>
-        <hr class="hline" style="width:15%;text-align:lcenter;margin-left:42%">
-        <h2>Create New Wallet</h2>
-        <p>Currency: <select id="curr">
-            <option selected>INR</option>
-            <option>USD</option>    
-        </select>
-        <p>Status: <select id="status">
-            <option selected>ACTIVE</option>
-            <option>INACTIVE</option>    
-        </select>
-        <button class="button" id="cw" onclick="createwallet()">Create</button>
-        <p id="display1"></p>
+    <div class="totaltotalc">
+    <div class="totalc">
+        <div class="changest">
+            <h2 class="cws">Wallet Status</h2>
+            <h3 id="cstatus"></h3>
+            <button class="button" id="submit" onclick="Create()"></button>
+            <p id="display"></p>
+            <p>OTP: <input type="number", id="OTPinput"></p>
+            <button class="button" id="validateotp" onclick="OTPvalidation()">Validate OTP</button>
+            <p id="otpresponse"></p>
+            <p id="displayOTP"></p>
+        </div>
+
+        <hr class="vertical1">
+        <hr class="vertical2">
+
+        <div class="balance"> 
+            <h3>Balance</h2>   
+            <h2 id=wbalance></h2>
+            <hr class="hline" style="width:15%;text-align:lcenter">
+            <h2>Create New Wallet</h2>
+            <p>Currency: <select id="curr">
+                <option selected>INR</option>
+                <option>USD</option>    
+            </select>
+            <p>Status: <select id="status">
+                <option selected>ACTIVE</option>
+                <option>INACTIVE</option>    
+            </select>
+            <button class="button" id="cw" onclick="createwallet()">Create</button>
+            <p id="display1"></p>
+        </div>
+        
+
+        <div class="cardsl">
+            <h2>Cards Linked to the Wallet</h2>
+            <div>
+            <table style="width:100%" class="cdtable" id="cardtable">
+                <tr>
+                <th>Card Number</th>
+                <th>Card Issuer</th>
+                </tr>
+            </table>
+        </div>
+        </div>
     </div>
-    <div class="changest">
-        <h2 class="cws">Wallet Status</h2>
-        <h3 id="cstatus"></h3>
-        <button class="button" id="submit" onclick="Create()"></button>
-        <p id="display"></p>
-        <p>OTP: <input type="number", id="OTPinput"></p>
-        <button class="button" id="validateotp" onclick="OTPvalidation()">Validate OTP</button>
-        <p id="otpresponse"></p>
-        <p id="displayOTP"></p>
-    </div>
+</div>
+
+
     <script>
-            getwalletdetails();
-            function getwalletdetails(){
-                var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+            var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
                 console.log(allwallets);
+                document.getElementById("wallets").innerHTML="";
                 var walts=document.getElementById("wallets");
                 console.log(localStorage.getItem("CurrentUserAllWallets").length);
                 if(localStorage.getItem("CurrentUserAllWallets").length==0){
@@ -181,11 +240,13 @@
                 }else{
                     walts.value=allwallets[0];
                     for (var i = 0 ; i < allwallets.length; i++) {
-                    var option = document.createElement("option");
-                    option.text = allwallets[i];
-                    walts.add(option, walts[0]);
+                        var option = document.createElement("option");
+                        option.text = allwallets[i];
+                        walts.add(option, walts[0]);
+                    }
+                    getwalletdetails();
                 }
-            
+            function getwalletdetails(){         
 
 
 
@@ -225,7 +286,53 @@
                     }                  
                 })
                 .catch(error => console.log('Authorization failed : ' + error.message));
-            }
+
+
+
+                fetch("http://localhost:8080/Wallet/CardList",{
+                    method:'POST',
+                    body: JSON.stringify({walletid:selectedwallet}),
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(json => {
+                    var cardsst= (json.response).toString().split(",");
+                    console.log(cardsst.length);                        
+                    var table1 = document.getElementById("cardtable");
+                    var tbody = document.createElement("tbody")
+                    var rowCount = table1.rows.length;
+                    for (var i = rowCount - 1; i > 0; i--) {
+                        table1.deleteRow(i);
+                    }
+                    if(cardsst.length===1){
+                        var tr = document.createElement("tr");
+                            var td = document.createElement("td");
+                            var txt = document.createTextNode("No Cards Linked");
+                            td.appendChild(txt);
+                            tr.appendChild(td);
+                            tbody.appendChild(tr);
+                            table1.appendChild(tbody);
+                    }else{
+                        for (var i = 0 ; i < cardsst.length; i=i+2) {
+                            var tr = document.createElement("tr");
+                            var td = document.createElement("td");
+                            var txt = document.createTextNode("**** **** **** "+cardsst[i]);
+                            td.appendChild(txt);
+                            tr.appendChild(td);
+
+                            var td = document.createElement("td");
+                            var txt = document.createTextNode(cardsst[i+1]);
+                            td.appendChild(txt);
+                            tr.appendChild(td);
+                            tbody.appendChild(tr);
+
+                        console.log(tbody);
+                        table1.appendChild(tbody);
+                    }
+                }
+            
+                })
+                .catch(error => console.log('Authorization failed : ' + error.message));
             }
 
             async function Create(){
