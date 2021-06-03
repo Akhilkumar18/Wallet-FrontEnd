@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Wallet</title>
+    <style>
+        
+    </style>
+    <style>
+    
+    *{
+            margin: 0px;
+            padding: 0px;
+        }
+        .navbar {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color:black;
+            text-color:white;
+            align-items: center;
+            padding: 15px;
+        }
+        .items{
+            text-decoration: none;
+            color:white;
+            margin-right: 50px;
+            margin-left: 20px;
+        }
+        .button {
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 2px 1px;
+            border-radius: 8px;
+        }
+        .vertical1{
+            border-left: 2px solid black;
+            height: 300px;
+            position:absolute;
+            top: 30%;
+            left: 33%;
+        }
+
+        .vertical2{
+            border-left: 2px solid black;
+            height: 300px;
+            position:absolute;
+            top: 30%;
+            left: 66%;
+        }
+       .button {
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 20px 8px;
+            border-radius: 8px;
+            margin-left: 11.5%;
+        }
+        .headi{
+            text-align: center;
+            margin-top: 4%;
+            
+        }
+        .balance{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-right: 70px;
+            
+        }
+        .balance h2{
+            margin-top: 5px
+        }
+
+        .balance p{
+            margin-top:15px;
+            margin-bottom:10px;
+            font-size: 18px;
+        }
+
+        .changest{
+            
+            padding: 10px;
+                        
+        }
+        .changest p{
+            margin-top:5px;
+            margin-bottom:10px;
+            font-size: 18px;
+        }
+
+        .cardsl{
+            display: flex;
+            flex-direction: column;
+
+                        
+        }
+        .cardsl h2{
+            margin-bottom: 20px;
+        }
+
+        .cdtable{
+            text-align: right;
+        }
+
+        .cws{
+            margin-bottom: 30px;
+        }
+
+        .button {
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 20px 8px;
+            border-radius: 8px;
+        }
+        .hline{
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .totalc{
+            display:flex;
+            flex-direction: row;
+            margin-top: 60px;
+            width: 80%;
+            justify-content: space-between;
+
+        }
+
+        .totaltotalc{
+            display:flex;
+            justify-content: center;
+        }  
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1 class="items">FSS WALLET</h1>
+        <div class="nav-links">
+                <a href="wallet_frag.html" class="items">Wallet</a>
+                <a href="#" class="items">Payments</a>
+                <a href="#" class="items">Cards</a>
+                <a href="#" class="items">Transactions</a>
+                <a href="#" class="items">My Account</a>
+            
+        </div>
+    </nav>
+    <div class ="headi">
+        <h3 id="dropd1">Select Wallet: <select id="wallets" onchange= "getCards()">       
+        </select>
+        <h3 id="dropd1">Select Card: <select id="cardd" onchange= "getCardDetails()">       
+        </select>
+        </h3>
+    </div>
+    <div class="totaltotalc">
+    <div class="totalc">
+        <div class="changest">
+            <h2>Link New Card</h2>
+            <p>Card Issuer: 
+            <input type="text" id="card_issuer"></p>
+            <p>Card Number: 
+            <input type="text" id="card_number"></p>
+            <p>CVV: 
+            <input type="text" id="cvv"></p>
+            <p>Expiry: 
+            <input type="text" id="expiry"></p>
+            <button class="button" id="cw" onclick="LinkC()">Link Card</button>
+            <p id="display"></p>
+        </div>
+
+        <hr class="vertical1">
+        <hr class="vertical2">
+
+        <div class="balance"> 
+            <h3>Card Balance</h2>   
+            <h2 id=wbalance></h2>
+            <hr class="hline" style="width:15%;text-align:lcenter">
+            <button class="button" id="cw" onclick="Delink()">Click Here To Delink This Card</button>
+            <p id="display1"></p>
+        </div>
+        
+
+        <div class="cardsl">
+            <h3>Cards Linked to the Wallet</h3>
+            <div>
+            <table style="width:100%" class="cdtable" id="cardtable">
+                <tr>
+                <th>Card Number</th>
+                <th>Card Issuer</th>
+                </tr>
+            </table>
+        </div>
+        </div>
+    </div>
+</div>
+<script>
+    var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+    console.log(allwallets);
+    document.getElementById("wallets").innerHTML="";
+    var walts=document.getElementById("wallets");
+    console.log(localStorage.getItem("CurrentUserAllWallets").length);
+    if(localStorage.getItem("CurrentUserAllWallets").length==0){
+        var option = document.createElement("option");
+        option.text = "No wallets found";
+        walts.add(option, walts[0]);
+        
+    }else{
+        walts.value=allwallets[0];
+        for (var i = 0 ; i < allwallets.length; i++) {
+            var option = document.createElement("option");
+            option.text = allwallets[i];
+            walts.add(option, walts[0]);
+        }
+        getCards();
+
+    
+    }
+
+    
+
+
+    async function getCards(){
+        var walts=document.getElementById("wallets");
+        document.getElementById("cardd").innerHTML="";
+        var cardss=document.getElementById("cardd");
+        var swalletid=walts.options[walts.selectedIndex].text;
+        console.log(swalletid);
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+        fetch("http://localhost:8080/Wallet/CardList",{
+                    method:'POST',
+                    body: JSON.stringify({walletid:swalletid}),
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(json => {
+                    var cardsst= (json.response).toString().split(",");
+                    console.log(cardsst);                        
+                    if(cardsst.length===1){
+                        var option = document.createElement("option");
+                            option.text = "No Cards Linked";
+                            cardss.add(option, cardss[0]);
+                    }else{
+                        cardss.value= "**** **** **** "+cardsst[0]+","+cardsst[1];
+                        for (var i = 0 ; i < cardsst.length; i=i+2) {
+                            var option = document.createElement("option");
+                            option.text = "**** **** **** "+cardsst[i]+","+cardsst[i+1];
+                            cardss.add(option, cardss[0]);
+
+                        }
+                        getCardDetails();
+                    }
+                })
+                .catch(error => console.log('Authorization failed : ' + error.message));
+    }
+
+    async function getCardDetails(){
+        var walts=document.getElementById("wallets");
+        var cardss=document.getElementById("cardd");
+        var swalletid=walts.options[walts.selectedIndex].text;
+        var scard=(cardss.options[cardss.selectedIndex].text).toString().split(",");
+        console.log(swalletid,scard);
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+        fetch("http://localhost:8080/Wallet/GetCardBalance",{
+            method:'POST',
+            body: JSON.stringify({walletid:swalletid,cardno:scard[0].substring(15),cardissuer:scard[1]}),
+            headers: headers
+        })
+        .then(response => response.json())
+        .then(json => {
+        console.log(json)
+        var walletB= json.response;
+        document.getElementById("wbalance").innerHTML=walletB;                        
+        })
+        .catch(error => console.log('Authorization failed : ' + error.message));
+    }
+
+
+    async function Delink(){
+        var walts=document.getElementById("wallets");
+        var cardss=document.getElementById("cardd");
+        var swalletid=walts.options[walts.selectedIndex].text;
+        var scard=(cardss.options[cardss.selectedIndex].text).toString().split(",");
+        console.log(swalletid,scard);
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+        fetch("http://localhost:8080/Wallet/DelinkCard",{
+            method:'POST',
+            body: JSON.stringify({walletid:swalletid,cardno:scard[0].substring(15),cardissuer:scard[1]}),
+            headers: headers
+        })
+        .then(response => response.json())
+        .then(json => {
+        console.log(json)
+        var walletB= json.response;
+        alert(json.response);
+        location.reload();                
+        })
+        .catch(error => console.log('Authorization failed : ' + error.message));
+    }
+
+
+    async function LinkC(){
+        document.getElementById("display").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var card_issuer=document.getElementById("card_issuer").value;
+        var card_number=document.getElementById("card_number").value;
+        var cvv=document.getElementById("cvv").value;
+        var expiry=document.getElementById("expiry").value;
+        var walletid=walts.options[walts.selectedIndex].text;
+    	fetch("http://localhost:8080/Wallet/LinkCard",{
+        method:'POST',
+        body:JSON.stringify({cardissuer:card_issuer, cardno:card_number, cvv:cvv, expiry:expiry, walletid: walletid}),
+        headers: headers
+    })
+
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("LinkCard_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("LinkCard_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display").innerHTML=resp.response;
+        alert("Card added");
+        location.reload();
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+
+    }
+</script>
+    
+</body>
+</html>

@@ -146,11 +146,7 @@
         .totaltotalc{
             display:flex;
             justify-content: center;
-        }
-
-
-    
-        
+        }      
         
     </style>
 </head>
@@ -159,9 +155,9 @@
     <nav class="navbar">
         <h1 class="items">FSS WALLET</h1>
         <div class="nav-links">
-                <a href="#" class="items">Wallet</a>
-                <a href="#" class="items">Payments</a>
-                <a href="#" class="items">Cards</a>
+                <a href="wallet_frag.html" class="items">Wallet</a>
+                <a href="Payments.html" class="items">Payments</a>
+                <a href="Cards_frang.html" class="items">Cards</a>
                 <a href="#" class="items">Transactions</a>
                 <a href="#" class="items">My Account</a>
             
@@ -247,8 +243,7 @@
                     getwalletdetails();
                 }
             function getwalletdetails(){         
-
-
+                var walts=document.getElementById("wallets");
 
                 var selectedwallet=walts.options[walts.selectedIndex].text;
                 console.log(selectedwallet);
