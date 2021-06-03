@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cards</title>
+</head>
+<body>
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'Link')">Link Card</button>
+  <button class="tablinks" onclick="openCity(event, 'Delink')">Delink Card</button>
+</div>
+
+<div id="Link" class="tabcontent">
+	<h1>Link Card</h1>
+	<p>Card Issuer:
+	<input type="text" id="card_issuer1"></p>
+	<p>Card Number
+	<input type="text" id="card_number1"></p>
+	<p>CVV:
+	<input type="text" id="cvv"></p>
+	<p>Expiry
+	<input type="text" id="expiry"></p>
+	<p>Select Wallet: <select id="wallets" onchange= "getwalletdetails()"></select>
+	</p>
+	<button value="Link" onclick="Link()">Link</button>
+	<p id="display1"></p>
+</div>
+
+<div id="Delink" class="tabcontent">
+	<h1>Deink Card</h1>
+	<p>Card Issuer:
+	<input type="text" id="card_issuer"></p>
+	<p>Card Number(Last 4 digits)
+	<input type="text" id="card_number"></p>
+	<p>Wallet ID:
+	<input type="text" id="walletid"></p>
+	<button value="Delink" onclick="Delink()">Delink</button>
+	<p id="display2"></p>
+</div>
+
+</body>
+
+<style type="text/css">
+	.tabcontent {
+		display: none;
+		padding: 6px 12px;
+		border: 1px solid #ccc;
+		border-top: none;
+	}
+	button{
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 20px 8px;
+            border-radius: 8px;
+        }
+</style>
+
+<script type="text/javascript">
+	function openCity(evt, cityName) {
+		// Declare all variables
+		var i, tabcontent, tablinks;
+
+		// Get all elements with class="tabcontent" and hide them
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+		  tabcontent[i].style.display = "none";
+		}
+
+		// Get all elements with class="tablinks" and remove the class "active"
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+		  tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+
+		// Show the current tab, and add an "active" class to the button that opened the tab
+		document.getElementById(cityName).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
+
+	console.log(localStorage.getItem("CurrentUserAllWallets"));
+            var walts=document.getElementById("wallets");
+            var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+            walts.value=allwallets[0];
+            for (var i = 0 ; i < allwallets.length; i++) {
+                var option = document.createElement("option");
+                option.text = allwallets[i];
+                walts.add(option, walts[0]);
+            }
+	async function Link(){
+        document.getElementById("display1").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var card_issuer=document.getElementById("card_issuer1").value;
+        var card_number=document.getElementById("card_number1").value;
+        var cvv=document.getElementById("cvv").value;
+        var expiry=document.getElementById("expiry").value;
+        var walletid=walts.options[walts.selectedIndex].text;
+        console.log(walletid);
+    	fetch("http://localhost:8080/Wallet/LinkCard",{
+        method:'POST',
+        body:JSON.stringify({cardissuer:card_issuer, cardno:card_number, cvv:cvv, expiry:expiry, walletid: walletid}),
+        headers: headers
+    })
+
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("LinkCard_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("LinkCard_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display1").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+
+	async function Delink(){
+        document.getElementById("display2").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var card_issuer=document.getElementById("card_issuer").value;
+        var card_number=document.getElementById("card_number").value;
+        var walletid=document.getElementById("walletid").value;
+    	fetch("http://localhost:8080/Wallet/DelinkCard",{
+        method:'POST',
+        body:JSON.stringify({cardissuer:card_issuer, cardno:card_number, walletid: walletid}),
+        headers: headers
+    })
+
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("DelinkCard_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("DelinkCard_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("display2").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+}
+</script>
+
+</html>
