@@ -154,11 +154,11 @@
     <nav class="navbar">
         <h1 class="items">FSS WALLET</h1>
         <div class="nav-links">
-                <a href="wallet_frag.html" class="items">Wallet</a>
-                <a href="#" class="items">Payments</a>
-                <a href="#" class="items">Cards</a>
-                <a href="#" class="items">Transactions</a>
-                <a href="#" class="items">My Account</a>
+            <a href="wallet_frag.html" class="items">Wallet</a>
+            <a href="Payments.html" class="items">Payments</a>
+            <a href="Cards_frang.html" class="items">Cards</a>
+            <a href="#" class="items">Transactions</a>
+            <a href="#" class="items">My Account</a>
             
         </div>
     </nav>
@@ -198,15 +198,10 @@
         
 
         <div class="cardsl">
-            <h3>Cards Linked to the Wallet</h3>
-            <div>
-            <table style="width:100%" class="cdtable" id="cardtable">
-                <tr>
-                <th>Card Number</th>
-                <th>Card Issuer</th>
-                </tr>
-            </table>
-        </div>
+            <h3>Manage payments with Card here</h3>
+            <input type="button" class="button" onclick="location.href='payments.html'" value="Topup wallet">
+        <input type="button" class="button" onclick="location.href='payments.html'" value="Send money to Card">
+            
         </div>
     </div>
 </div>
@@ -345,7 +340,7 @@
         var resp=JSON.parse(localStorage.getItem("LinkCard_Response"));
         console.log(resp.responseCode);
         document.getElementById("display").innerHTML=resp.response;
-        alert("Card added");
+        alert(resp.response);
         location.reload();
     })
     .catch(error => console.log('Authorization failed : ' + error.message));

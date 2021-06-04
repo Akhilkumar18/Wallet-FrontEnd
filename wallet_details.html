@@ -77,16 +77,14 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            margin-top: -8%;
             
         }
-        .balance h2{
-            margin-top: 5px;
-        }
+        
 
-        .balance p{
+        .balance h3{
             margin-top:15px;
-            margin-bottom:10px;
-            font-size: 18px;
+            padding: 0px;
         }
 
         .changest{
@@ -101,17 +99,22 @@
         }
 
         .cardsl{
+            margin-top: 10px;
             display: flex;
             flex-direction: column;
+            padding: 10px;
 
                         
         }
         .cardsl h2{
             margin-bottom: 20px;
         }
+        .cardsl p{
+            margin-bottom: 20px;
+        }
 
         .cdtable{
-            text-align: right;
+            text-align: center;
         }
 
         .cws{
@@ -167,7 +170,7 @@
 
 
     <div class ="headi">
-        <h3 id="dropd1">Select Wallet: <select id="wallets" onchange= "getwalletdetails()">       
+        <h3 id="dropd1">Select Wallet: <select id="walletsA" onchange= "getwalletdetails()">    
         </select>
         </h3>
     </div>
@@ -188,10 +191,23 @@
         <hr class="vertical2">
 
         <div class="balance"> 
-            <h3>Balance</h2>   
-            <h2 id=wbalance></h2>
+            <h2>Balance</h2>   
+            <h3 id=wbalance></h3>
             <hr class="hline" style="width:15%;text-align:lcenter">
+            <h2>Cards Linked to the Wallet</h2>
+            <table style="width:100%" class="cdtable" id="cardtable">
+                <tr>
+                <th>Card Number</th>
+                <th>Card Issuer</th>
+                </tr>
+            </table>
+            
+        </div>
+        
+
+        <div class="cardsl">
             <h2>Create New Wallet</h2>
+            <p>Wallet Name: <input type="text", id="WNAME"></p>
             <p>Currency: <select id="curr">
                 <option selected>INR</option>
                 <option>USD</option>    
@@ -200,21 +216,11 @@
                 <option selected>ACTIVE</option>
                 <option>INACTIVE</option>    
             </select>
+            <p>
             <button class="button" id="cw" onclick="createwallet()">Create</button>
+            </p>
             <p id="display1"></p>
-        </div>
-        
-
-        <div class="cardsl">
-            <h2>Cards Linked to the Wallet</h2>
-            <div>
-            <table style="width:100%" class="cdtable" id="cardtable">
-                <tr>
-                <th>Card Number</th>
-                <th>Card Issuer</th>
-                </tr>
-            </table>
-        </div>
+            
         </div>
     </div>
 </div>
@@ -225,8 +231,8 @@
             var wallnames=localStorage.getItem("CurrentUserWalletsnames").split(",");
             console.log(wallnames);
                 console.log(allwallets);
-                document.getElementById("wallets").innerHTML="";
-                var walts=document.getElementById("wallets");
+                document.getElementById("walletsA").innerHTML="";
+                var walts=document.getElementById("walletsA");
                 console.log(localStorage.getItem("CurrentUserAllWallets").length);
                 if(localStorage.getItem("CurrentUserAllWallets").length==0){
                     var option = document.createElement("option");
@@ -245,7 +251,7 @@
                     getwalletdetails();
                 }
             function getwalletdetails(){         
-                var walts=document.getElementById("wallets");
+                var walts=document.getElementById("walletsA");
                 var selectedwallet=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
                 console.log(selectedwallet);
                 let headers = new Headers();
@@ -408,9 +414,10 @@
             var wstat=curr.options[curr.selectedIndex].text;
             var currencys=document.getElementById("curr").value;
             var statuss=document.getElementById("status").value;
+            var WN=document.getElementById("WNAME").value;
         await fetch("http://localhost:8080/Wallet/CreateWallet",{
             method:'PUT',
-            body:JSON.stringify({mobileno: MN, currency: currencys,status: statuss}),
+            body:JSON.stringify({mobileno: MN,walletname: WN, currency: currencys,status: statuss}),
             headers: headers
         })
         .then(response => response.json())
