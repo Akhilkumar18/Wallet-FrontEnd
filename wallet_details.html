@@ -77,13 +77,18 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-top: -8%;
+            margin-top: -5%;
             
         }
         
 
         .balance h3{
-            margin-top:15px;
+            margin-bottom:15px;
+            padding: 0px;
+        }
+
+        .balance h2{
+            margin-bottom:15px;
             padding: 0px;
         }
 
@@ -207,7 +212,7 @@
 
         <div class="cardsl">
             <h2>Create New Wallet</h2>
-            <p>Wallet Name: <input type="text", id="WNAME"></p>
+            <p>Wallet Name: <input type="text", id="WNAME", value=""></p>
             <p>Currency: <select id="curr">
                 <option selected>INR</option>
                 <option>USD</option>    
@@ -238,11 +243,13 @@
                     var option = document.createElement("option");
                     option.text = "No wallets found";
                     walts.add(option, walts[0]);
+                    document.getElementById("WNAME").value="Wallet-1";
                     document.getElementById("wbalance").innerHTML="Create wallet to start your payments";
                     document.getElementById("cstatus").innerHTML="No wallet found"; 
                     document.getElementById("submit").innerHTML="Select a wallet"; 
                 }else{
                     walts.value=allwallets[0];
+                    document.getElementById("WNAME").value="Wallet-"+(allwallets.length+1);
                     for (var i = 0 ; i < allwallets.length; i++) {
                         var option = document.createElement("option");
                         option.text = wallnames[i];
