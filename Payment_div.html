@@ -170,8 +170,9 @@
 		<div class="totalc">
 			<div class="AddFronBank">
 				<h1>Add From Bank</h1>
-                <p>Card Number<input type="text" id="cardno1"></p>
-                <p>Card Issuer<input type="text" id="cardissuer1"></p>
+                <h3 id="dropd1">Select Card: <select id="cardd1" >       
+		        </select>
+		        </h3>
                 <p>Amount<input type="text" id="amount1"></p>
                 <button onclick="topup()">Make Payment</button>
                 <p id="display1"></p>
@@ -182,8 +183,9 @@
 
 			<div class="AddToBank">
                 <h1>Add To Bank</h1>
-                <p>Card Number<input type="text" id="cardno2"></p>
-                <p>Card Issuer<input type="text" id="cardissuer2"></p>
+                <h3 id="dropd1">Select Card: <select id="cardd2" >       
+		        </select>
+		        </h3>
                 <p>Amount<input type="text" id="amount2"></p>
                 <button onclick="bank()">Make Payment</button>
                 <p id="display2"></p>
@@ -224,6 +226,8 @@
 	        option.text = wallnames[i];
 	        walts.add(option, walts[0]);
 	    }
+	    getCards1();
+	    getCards2();
 	}
 
 	const receivers = document.querySelector('#receivers')
@@ -234,6 +238,75 @@
         receivers.appendChild(document.createElement('br'))
         receivers.appendChild(newInput)
     })
+
+        async function getCards1(){
+        var walts=document.getElementById("walletsA");
+        document.getElementById("cardd1").innerHTML="";
+        var cardss=document.getElementById("cardd1");
+        var swalletid=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
+        console.log(swalletid);
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+        fetch("http://localhost:8080/Wallet/CardList",{
+                    method:'POST',
+                    body: JSON.stringify({walletid:swalletid}),
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(json => {
+                    var cardsst= (json.response).toString().split(",");
+                    console.log(cardsst);                        
+                    if(cardsst.length===1){
+                        var option = document.createElement("option");
+                            option.text = "No Cards Linked";
+                            document.getElementById("wbalance").innerHTML="No Card Selected";
+                            cardss.add(option, cardss[0]);
+                    }else{
+                        cardss.value= "**** **** **** "+cardsst[0]+","+cardsst[1];
+                        for (var i = 0 ; i < cardsst.length; i=i+2) {
+                            var option = document.createElement("option");
+                            option.text = "**** **** **** "+cardsst[i]+","+cardsst[i+1];
+                            cardss.add(option, cardss[0]);
+                        }
+                    }
+                })
+                .catch(error => console.log('Authorization failed : ' + error.message));
+    }
+    	async function getCards2(){
+        var walts=document.getElementById("walletsA");
+        document.getElementById("cardd2").innerHTML="";
+        var cardss=document.getElementById("cardd2");
+        var swalletid=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
+        console.log(swalletid);
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+        fetch("http://localhost:8080/Wallet/CardList",{
+                    method:'POST',
+                    body: JSON.stringify({walletid:swalletid}),
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(json => {
+                    var cardsst= (json.response).toString().split(",");
+                    console.log(cardsst);                        
+                    if(cardsst.length===1){
+                        var option = document.createElement("option");
+                            option.text = "No Cards Linked";
+                            document.getElementById("wbalance").innerHTML="No Card Selected";
+                            cardss.add(option, cardss[0]);
+                    }else{
+                        cardss.value= "**** **** **** "+cardsst[0]+","+cardsst[1];
+                        for (var i = 0 ; i < cardsst.length; i=i+2) {
+                            var option = document.createElement("option");
+                            option.text = "**** **** **** "+cardsst[i]+","+cardsst[i+1];
+                            cardss.add(option, cardss[0]);
+                        }
+                    }
+                })
+                .catch(error => console.log('Authorization failed : ' + error.message));
+    }
 
 	async function payment(){
         document.getElementById("display3").innerHTML="";
@@ -291,9 +364,10 @@
         document.getElementById("display1").innerHTML="";
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        var cardissuer=document.getElementById("cardissuer1").value;
-        var cardno=document.getElementById("cardno1").value;
-        //var walletid=document.getElementById("wallets").value;
+        var scard=(cardd1.options[cardd1.selectedIndex].text).toString().split(",");
+        var cardissuer=scard[1];
+        var cardno=scard[0].substring(15);
+        console.log({cardissuer:cardissuer, cardno:cardno, walletid:walletid, amount:amount})
         var amount=document.getElementById("amount1").value;
         fetch("http://localhost:8080/Payment/AddFromBank",{
         method:'POST',
@@ -317,8 +391,9 @@
         document.getElementById("display2").innerHTML="";
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        var cardissuer=document.getElementById("cardissuer2").value;
-        var cardno=document.getElementById("cardno2").value;
+        var scard=(cardd2.options[cardd2.selectedIndex].text).toString().split(",");
+        var cardissuer=scard[1];
+        var cardno=scard[0].substring(15);
         //var walletid=document.getElementById("wallets").value;
         var amount=document.getElementById("amount2").value;
         fetch("http://localhost:8080/Payment/AddToBank",{
