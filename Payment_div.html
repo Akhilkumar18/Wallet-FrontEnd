@@ -190,7 +190,15 @@
             </div>
 
             <div class="SendToFriend">
-                <h2>Send To Friend</h2>
+                <h1>Send To Friend</h1>
+				<div id='receivers'>
+				    <p>Receiver Mobile No.</p><input type="text" class="receivermobileno">
+				</div>
+				<p><button id="add-button">Add Receiver</button></p>
+				<p>Total Amount<input type="text" id="amount"></p>
+				<p>Device ID<input type="text" id="deviceid"></p>
+				<button onclick="payment()">Make Payment</button>
+				<p id="display3"></p>
             </div>
         </div>
     </div>
@@ -217,6 +225,64 @@
 	        walts.add(option, walts[0]);
 	    }
 	}
+
+	const receivers = document.querySelector('#receivers')
+    document.querySelector("#add-button").addEventListener('click',(e)=> {
+        const newInput = document.createElement('input')
+        newInput.classList.add("receivermobileno")
+        receivers.appendChild(document.createElement('br'))
+        receivers.appendChild(document.createElement('br'))
+        receivers.appendChild(newInput)
+    })
+
+	async function payment(){
+        document.getElementById("display3").innerHTML="";
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var walts=document.getElementById("walletsA");
+        var senderwalletid=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
+        console.log(senderwalletid);
+        var receiverwalletid= document.getElementsByClassName("receivermobileno")
+        console.log(receiverwalletid)
+        let receiversList = []
+        for (let e of receiverwalletid) receiversList.push(e.value);
+        var amount=document.getElementById("amount").value;
+        var deviceid=document.getElementById("deviceid").value;
+        console.log({Receivermobileno:receiversList.join(','), senderwalletid:senderwalletid, deviceid:deviceid , money:amount})
+        console.log(receiversList.length)
+        if(receiversList.length===1){
+	    	fetch("http://localhost:8080/Payment/SendToFriend",{
+	        method:'POST',
+	        body:JSON.stringify({receivermobileno:receiversList[0], senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+	        headers: headers
+		    })
+		    .then(response => response.json())
+		    .then(json => {
+		        console.log(json);
+		        localStorage.setItem("SendToFriend_Response", JSON.stringify(json));
+		        var resp=JSON.parse(localStorage.getItem("SendToFriend_Response"));
+		        console.log(resp.responseCode);
+		        document.getElementById("display3").innerHTML=resp.response;
+		    })
+		    .catch(error => console.log('Authorization failed : ' + error.message));
+        }
+        else{
+	    	fetch("http://localhost:8080/Payment/SendToMultiple",{
+	            method:'POST',
+	            body:JSON.stringify({receivermobileno:receiversList.join(','), senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+	            headers: headers
+	        })
+	        .then(response => response.json())
+	        .then(json => {
+	            console.log(json);
+	            localStorage.setItem("SendToMultiple_Response", JSON.stringify(json));
+	            var resp=JSON.parse(localStorage.getItem("SendToMultiple_Response"));
+	            console.log(resp.responseCode);
+	            document.getElementById("display3").innerHTML=resp.response;
+	        })
+	        .catch(error => console.log('Authorization failed : ' + error.message));
+    	}
+}
 
     async function topup(){
     	var walts=document.getElementById("walletsA");
@@ -270,65 +336,65 @@
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
 }
-    async function friend(){
-        document.getElementById("display3").innerHTML="";
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        var receiverwalletid=document.getElementById("receiverwalletid3").value;
-        var senderwalletid=document.getElementById("senderwalletid3").value;
-        var amount=document.getElementById("amount3").value;
-        var deviceid=document.getElementById("deviceid3").value;
-        fetch("http://localhost:8080/Payment/SendToFriend",{
-        method:'POST',
-        body:JSON.stringify({receiverwalletid:receiverwalletid, senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
-        headers: headers
-    })
-    .then(response => response.json())
-    .then(json => {
-        console.log(json);
-        localStorage.setItem("SendToFriend_Response", JSON.stringify(json));
-        var resp=JSON.parse(localStorage.getItem("SendToFriend_Response"));
-        console.log(resp.responseCode);
-        document.getElementById("display3").innerHTML=resp.response;
-    })
-    .catch(error => console.log('Authorization failed : ' + error.message));
-}
+//     async function friend(){
+//         document.getElementById("display3").innerHTML="";
+//         let headers = new Headers();
+//         headers.append('Content-Type', 'application/json');
+//         var receiverwalletid=document.getElementById("receiverwalletid3").value;
+//         var senderwalletid=document.getElementById("senderwalletid3").value;
+//         var amount=document.getElementById("amount3").value;
+//         var deviceid=document.getElementById("deviceid3").value;
+//         fetch("http://localhost:8080/Payment/SendToFriend",{
+//         method:'POST',
+//         body:JSON.stringify({receiverwalletid:receiverwalletid, senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+//         headers: headers
+//     })
+//     .then(response => response.json())
+//     .then(json => {
+//         console.log(json);
+//         localStorage.setItem("SendToFriend_Response", JSON.stringify(json));
+//         var resp=JSON.parse(localStorage.getItem("SendToFriend_Response"));
+//         console.log(resp.responseCode);
+//         document.getElementById("display3").innerHTML=resp.response;
+//     })
+//     .catch(error => console.log('Authorization failed : ' + error.message));
+// }
 
-    const receivers = document.querySelector('#receivers')
-    document.querySelector("#add-button").addEventListener('click',(e)=> {
-        const newInput = document.createElement('input')
-        newInput.classList.add("receiverwalletid")
-        receivers.appendChild(document.createElement('br'))
-        receivers.appendChild(document.createElement('br'))
-        receivers.appendChild(newInput)
-    })
+//     const receivers = document.querySelector('#receivers')
+//     document.querySelector("#add-button").addEventListener('click',(e)=> {
+//         const newInput = document.createElement('input')
+//         newInput.classList.add("receiverwalletid")
+//         receivers.appendChild(document.createElement('br'))
+//         receivers.appendChild(document.createElement('br'))
+//         receivers.appendChild(newInput)
+//     })
 
-    async function multiple(){
-        document.getElementById("display4").innerHTML="";
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        var receiverwalletid= document.getElementsByClassName("receiverwalletid")
-        let receiversList = []
-        for (let e of receiverwalletid) receiversList.push(e.value);
-        var senderwalletid=document.getElementById("senderwalletid4").value;
-        var amount=document.getElementById("amount4").value;
-        var deviceid=document.getElementById("deviceid4").value;
-        // console.log({receiverwalletid:receiversList.join(', '), senderwalletid:senderwalletid, deviceid:deviceid , money:amount})
-        fetch("http://localhost:8080/Payment/SendToMultiple",{
-            method:'POST',
-            body:JSON.stringify({receiverwalletid:receiversList.join(','), senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
-            headers: headers
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log(json);
-            localStorage.setItem("SendToMultiple_Response", JSON.stringify(json));
-            var resp=JSON.parse(localStorage.getItem("SendToMultiple_Response"));
-            console.log(resp.responseCode);
-            document.getElementById("display4").innerHTML=resp.response;
-        })
-        .catch(error => console.log('Authorization failed : ' + error.message));
-}
+//     async function multiple(){
+//         document.getElementById("display4").innerHTML="";
+//         let headers = new Headers();
+//         headers.append('Content-Type', 'application/json');
+//         var receiverwalletid= document.getElementsByClassName("receiverwalletid")
+//         let receiversList = []
+//         for (let e of receiverwalletid) receiversList.push(e.value);
+//         var senderwalletid=document.getElementById("senderwalletid4").value;
+//         var amount=document.getElementById("amount4").value;
+//         var deviceid=document.getElementById("deviceid4").value;
+//         // console.log({receiverwalletid:receiversList.join(', '), senderwalletid:senderwalletid, deviceid:deviceid , money:amount})
+//         fetch("http://localhost:8080/Payment/SendToMultiple",{
+//             method:'POST',
+//             body:JSON.stringify({receiverwalletid:receiversList.join(','), senderwalletid:senderwalletid, deviceid:deviceid , money:amount}),
+//             headers: headers
+//         })
+//         .then(response => response.json())
+//         .then(json => {
+//             console.log(json);
+//             localStorage.setItem("SendToMultiple_Response", JSON.stringify(json));
+//             var resp=JSON.parse(localStorage.getItem("SendToMultiple_Response"));
+//             console.log(resp.responseCode);
+//             document.getElementById("display4").innerHTML=resp.response;
+//         })
+//         .catch(error => console.log('Authorization failed : ' + error.message));
+// }
 
 </script>
 
