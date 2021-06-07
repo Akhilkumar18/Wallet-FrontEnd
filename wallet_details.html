@@ -261,6 +261,8 @@
             var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
             var wallnames=localStorage.getItem("CurrentUserWalletsnames").split(",");
             var MN=localStorage.getItem("CurrentUser_mobile")
+            //localStorage.setItem("CurrentUserPWallet",null);
+            
             console.log(wallnames);
                 console.log(allwallets);
                 document.getElementById("walletsA").innerHTML="";
@@ -282,9 +284,14 @@
                         option.text = wallnames[i];
                         walts.add(option, walts[0]);
                     }
-                    let headers = new Headers();
+                    
+                    getwalletdetails();
+                }
+            function getwalletdetails(){   
+                let headers = new Headers();
                     headers.append('Content-Type', 'application/json');
                     headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+                    var respt;
                     fetch("http://localhost:8080/Wallet/GetPrimaryWallet",{
                         method:'POST',
                         body: JSON.stringify({mobileno:MN}),
@@ -293,28 +300,20 @@
                     .then(response => response.json())
                     .then(json => {
                         console.log(json.response);
-                        localStorage.setItem("CurrentUserPWallet",json.response);                      
+                        localStorage.setItem("CurrentUserPWallet",json.response);  
+                        console.log(localStorage.getItem("CurrentUserPWallet"));   
+                        if(selectedwallet==localStorage.getItem("CurrentUserPWallet")){
+                        document.getElementById("thisispwallet").innerHTML="This is your primary wallet to receive payments";
+                        }else{
+                            document.getElementById("changepw").style.visibility="visible";
+                        }              
                     })
-                    .catch(error => console.log('Authorization failed : ' + error.message));
-
-                    getwalletdetails();
-                }
-            function getwalletdetails(){         
+                    .catch(error => console.log('Authorization failed : ' + error.message));     
                 var walts=document.getElementById("walletsA");
                 var selectedwallet=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
                 document.getElementById("thisispwallet").innerHTML=null;
-                document.getElementById("changepw").style.visibility="hidden";
-                console.log(localStorage.getItem("CurrentUserPWallet"));
+                document.getElementById("changepw").style.visibility="hidden";                
                 console.log(selectedwallet);
-                if(selectedwallet==localStorage.getItem("CurrentUserPWallet")){
-                    document.getElementById("thisispwallet").innerHTML="This is your primary wallet to receive payments";
-                }else{
-                    document.getElementById("changepw").style.visibility="visible";
-                }
-                console.log(selectedwallet);
-                let headers = new Headers();
-                headers.append('Content-Type', 'application/json');
-                headers.append('GET', 'POST', 'PUT', 'OPTIONS');
                 console.log(localStorage.getItem("CurrentUser_mobile"));
                 fetch("http://localhost:8080/Wallet/GetWalletBalance",{
                     method:'POST',
