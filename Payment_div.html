@@ -162,7 +162,7 @@
 		</div>
 	</nav>
 	<div class="headi">
-		<h3 id="dropd1">Select Wallet: <select id="wallets" onchange= "getwalletdetails()">       
+		<h3 id="dropd1">Select Wallet: <select id="walletsA">       
         </select>
         </h3>
 	</div>
@@ -197,23 +197,37 @@
 </body>
 
 <script type="text/javascript">
-    console.log(localStorage.getItem("CurrentUserAllWallets"));
-    var walts=document.getElementById("wallets");
     var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
-    walts.value=allwallets[0];
-    for (var i = 0 ; i < allwallets.length; i++) {
+    var wallnames=localStorage.getItem("CurrentUserWalletsnames").split(",");
+    console.log(wallnames);
+    console.log(allwallets);
+    document.getElementById("walletsA").innerHTML="";
+    var walts=document.getElementById("walletsA");
+    console.log(localStorage.getItem("CurrentUserAllWallets").length);
+    if(localStorage.getItem("CurrentUserAllWallets").length==0){
         var option = document.createElement("option");
-        option.text = allwallets[i];
+        option.text = "No wallets found";
         walts.add(option, walts[0]);
     }
+    else{
+	    walts.value=allwallets[0];
+	    for (var i = 0 ; i < allwallets.length; i++) {
+	        var option = document.createElement("option");
+	        option.text = wallnames[i];
+	        walts.add(option, walts[0]);
+	    }
+	}
 
     async function topup(){
+    	var walts=document.getElementById("walletsA");
+        var walletid=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
+        console.log(walletid);
         document.getElementById("display1").innerHTML="";
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         var cardissuer=document.getElementById("cardissuer1").value;
         var cardno=document.getElementById("cardno1").value;
-        var walletid=document.getElementById("wallets").value;
+        //var walletid=document.getElementById("wallets").value;
         var amount=document.getElementById("amount1").value;
         fetch("http://localhost:8080/Payment/AddFromBank",{
         method:'POST',
@@ -231,12 +245,15 @@
     .catch(error => console.log('Authorization failed : ' + error.message));
 }
     async function bank(){
+    	var walts=document.getElementById("walletsA");
+        var walletid=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
+        console.log(walletid);
         document.getElementById("display2").innerHTML="";
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         var cardissuer=document.getElementById("cardissuer2").value;
         var cardno=document.getElementById("cardno2").value;
-        var walletid=document.getElementById("wallets").value;
+        //var walletid=document.getElementById("wallets").value;
         var amount=document.getElementById("amount2").value;
         fetch("http://localhost:8080/Payment/AddToBank",{
         method:'POST',

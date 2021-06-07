@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Transactions</title>
+</head>
+<body align="center">
+<div class ="headi">
+    <h3 id="dropd1">Select Wallet: <select id="wallets" onchange= "getCards()">
+    <option selected>All Wallets</option>  
+    </select>
+</div>
+<h1>Transactions</h1>
+<table class="table" id="table">
+	<tr>
+		<th>Details</th>
+		<th>Amount</th>
+	</tr>
+</table>
+</body>
+<script type="text/javascript">
+	var allwallets=localStorage.getItem("CurrentUserAllWallets").split(",");
+    var wallnames=localStorage.getItem("CurrentUserWalletsnames").split(",");
+    console.log(wallnames);
+    console.log(allwallets);
+    document.getElementById("walletsA").innerHTML="";
+    var walts=document.getElementById("walletsA");
+    console.log(localStorage.getItem("CurrentUserAllWallets").length);
+    if(localStorage.getItem("CurrentUserAllWallets").length==0){
+        var option = document.createElement("option");
+        option.text = "No wallets found";
+        walts.add(option, walts[0]);
+    }
+    else{
+	    walts.value=allwallets[0];
+	    for (var i = 0 ; i < allwallets.length; i++) {
+	        var option = document.createElement("option");
+	        option.text = wallnames[i];
+	        walts.add(option, walts[0]);
+	    }
+	}
+	function getwalletdetails(){      
+        var walts=document.getElementById("wallets");
+        var selectedwallet=allwallets[wallnames.indexOf(walts.options[walts.selectedIndex].text)];
+        console.log(selectedwallet);
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+        if(selectedwallet!="All Wallets"){
+        	console.log(localStorage.getItem("CurrentUser_mobile"));
+        	fetch("http://localhost:8080/Wallet/GetWalletTransactions",{
+	            method:'POST',
+	            body: JSON.stringify({walletid:selectedwallet}),
+	            headers: headers
+	        })
+	        .then(response => response.json())
+	        .then(json => {
+	            console.log(json)
+	            localStorage.setItem("Transactions_response", JSON.stringify(json));                       
+	        })
+	        .catch(error => console.log('Authorization failed : ' + error.message));
+	        }
+        else{
+        	console.log(localStorage.getItem("CurrentUser_mobile"));
+        	fetch("http://localhost:8080/Wallet/GetUserTransactions",{
+	            method:'POST',
+	            body: JSON.stringify({mobileno:CurrentUser_mobile}),
+	            headers: headers
+	        })
+	        .then(response => response.json())
+	        .then(json => {
+	            console.log(json)
+	            localStorage.setItem("Transactions_response", JSON.stringify(json));                        
+	        })
+	        .catch(error => console.log('Authorization failed : ' + error.message));
+		}
+    }
+</script>
+</html>
