@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Add Details</title>
+</head>
+<body align="center" onload="details()">
+<h1>User Details</h1>
+<TABLE align="center" id="myTable">
+	<tr><td>First Name</td><td><input type="text" id="first_name"></td></tr>
+	<tr><td>Middle Name</td><td><input type="text" id="middle_name"></td></tr>
+	<tr><td>Last Name</td><td><input type="text" id="last_name"></td></tr>
+	<tr><td>Email</td><td><input type="text" id="email"></td></tr>
+	<tr><td>Username</td><td><input type="text" id="username"></td></tr>
+	<tr><td>Password</td><td><input type="password" id="password"></td></tr>
+	<tr><td>User Type</td><td><input type="text" id="usertype"></td></tr>
+	<tr><td>Mobile No.</td><td><input type="text" id="mobileno"></td></tr>
+	<tr><td>Country Code</td><td><input type="text" id="countrycode"></td></tr>
+	<tr><td>Date of Birth</td><td><input type="text" id="dob"></td></tr>
+</TABLE>
+<p><input type="button" onclick="add()" value="Add Details" id="details"></p>
+<p><div id="display"></div></p>
+</body>
+<script type="text/javascript">
+	
+
+    async function add(){
+        var resp
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var first_name=document.getElementById("first_name").value;
+        var last_name=document.getElementById("last_name").value;
+        var middle_name=document.getElementById("middle_name").value;
+        var email=document.getElementById("email").value;
+        var username=document.getElementById("username").value;
+        var password=document.getElementById("password").value;
+        var usertype=document.getElementById("usertype").value;
+        var mobileno=document.getElementById("mobileno").value;
+        var countrycode=document.getElementById("countrycode").value;
+        var dob=document.getElementById("dob").value;
+	    await fetch("http://localhost:8080/User/AddUserDetails",{
+	        method:'PUT',
+	        body:JSON.stringify({"first_name":first_name,"middle_name":middle_name,"last_name":last_name,"email":email,"username":username,"password":password,"userType":usertype,"mobileno":mobileno,"countrycode":countrycode,"dob":dob}),
+	        headers: headers
+	    })
+	    .then(response => response.json())
+	    .then(json => {
+	        console.log(json)
+	        resp = json
+	    })
+	    .catch(error => console.log('Authorization failed : ' + error.message));
+	    console.log(resp.responseCode)
+	    if(resp.responseCode==="OK"){
+	        document.getElementById("display").innerHTML=resp.response;
+	    }
+	    else{
+	        document.getElementById("display").innerHTML=resp.response;
+	    }
+	}
+	async function details(){
+		let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+		mobileno=localStorage.getItem("CurrentUser_mobile");
+		await fetch("http://localhost:8080/User/UserDetails",{
+	        method:'POST',
+	        body:JSON.stringify({"mobileno":mobileno}),
+	        headers: headers
+	    })
+	    .then(response => response.json())
+	    .then(json => {
+	        console.log(json)
+	        resp = json
+	    })
+	    .catch(error => console.log('Authorization failed : ' + error.message));
+	    console.log(resp.responseCode)
+	    if(resp.responseCode==="OK"){
+	    	//document.getElementById("display").innerHTML=resp.response;
+	    	var temp=resp.response;
+	    	document.getElementById("first_name").value=temp.firstname;
+	    	document.getElementById("middle_name").value=temp.middlename;
+	    	document.getElementById("last_name").value=temp.lastname;
+	    	document.getElementById("dob").value=temp.dob;
+	    	document.getElementById("email").value=temp.email;
+	    	document.getElementById("email").disabled=true;
+	    	document.getElementById("mobileno").value=localStorage.getItem("CurrentUser_mobile");
+	    	document.getElementById("mobileno").disabled=true;
+	    	document.getElementById("countrycode").value=temp.countrycode;
+	    	document.getElementById("countrycode").disabled=true;
+	    	document.getElementById("details").value="Modify Details";
+			document.getElementById("myTable").deleteRow(4);
+	  		document.getElementById("myTable").deleteRow(4);
+	  		document.getElementById("myTable").deleteRow(4);
+			document.getElementById("details").onclick=modify;
+	    }
+	}
+
+	async function modify(){
+        var resp
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var first_name=document.getElementById("first_name").value;
+        var last_name=document.getElementById("last_name").value;
+        var middle_name=document.getElementById("middle_name").value;
+        var email=document.getElementById("email").value;
+        var mobileno=document.getElementById("mobileno").value;
+        var countrycode=document.getElementById("countrycode").value;
+        var dob=document.getElementById("dob").value;
+	    await fetch("http://localhost:8080/User/ModifyUserDetails",{
+	        method:'POST',
+	        body:JSON.stringify({"first_name":first_name,"middle_name":middle_name,"last_name":last_name,"dob":dob,"searchkey":localStorage.getItem("CurrentUser_mobile"),"keyname":"MobileNo"}),
+	        headers: headers
+	    })
+	    .then(response => response.json())
+	    .then(json => {
+	        console.log(json)
+	        resp = json
+	    })
+	    .catch(error => console.log('Authorization failed : ' + error.message));
+	    console.log(resp.responseCode)
+	    if(resp.responseCode==="OK"){
+	        document.getElementById("display").innerHTML=resp.response;
+	    }
+	    else{
+	        document.getElementById("display").innerHTML=resp.response;
+	    }
+	}
+
+
+</script>
+</html>
