@@ -2,10 +2,73 @@
 <html>
 <head>
 	<title>Add Details</title>
+	<style>
+		*{
+            margin: 0px;
+            padding: 0px;
+        }
+		.navbar {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color:black;
+            text-color:white;
+            align-items: center;
+            padding: 15px;
+        }
+        .items{
+            text-decoration: none;
+            color:white;
+            margin-right: 50px;
+            margin-left: 20px;
+        }
+		.totaltotalc{
+			margin-top: 30px;
+			
+		}
+		.totaltotalc h1{
+			margin-top: 10px;
+			margin-bottom: 10px;
+			
+		}
+		.table{
+			align-items: center;
+			margin-left: 38%;
+			height: 250px;
+			width: 20%
+		}
+		.td{
+			margin-top: 10px;
+			margin-bottom: 30px;
+		}
+		.button {
+            background-color:#3f3f3f; 
+            color: white;
+            padding: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 10px 8px;
+            border-radius: 8px;
+        }
+	</style>
 </head>
 <body align="center" onload="details()">
+	<nav class="navbar">
+        <h1 class="items">FSS WALLET</h1>
+        <div class="nav-links">
+                <a href="#" class="items">Wallet</a>
+                <a href="#" class="items">Payments</a>
+                <a href="#" class="items">Cards</a>
+                <a href="#" class="items">Transactions</a>
+                <a href="#" class="items">My Account</a>
+            
+        </div>
+    </nav>
+	<div class="totaltotalc">
 <h1>User Details</h1>
-<TABLE align="center" id="myTable">
+<TABLE align="center" id="myTable" class="table">
 	<tr><td>First Name</td><td><input type="text" id="first_name"></td></tr>
 	<tr><td>Middle Name</td><td><input type="text" id="middle_name"></td></tr>
 	<tr><td>Last Name</td><td><input type="text" id="last_name"></td></tr>
@@ -17,8 +80,10 @@
 	<tr><td>Country Code</td><td><input type="text" id="countrycode"></td></tr>
 	<tr><td>Date of Birth</td><td><input type="text" id="dob"></td></tr>
 </TABLE>
-<p><input type="button" onclick="add()" value="Add Details" id="details"></p>
+<p><input class= "button" type="button" onclick="add()" value="Add Details" id="details"></p>
 <p><div id="display"></div></p>
+<p><input class= "button" type="button" onclick="location.href='login_mobile.html'" value="Logout" id="details"></p>
+</div>
 </body>
 <script type="text/javascript">
 	
