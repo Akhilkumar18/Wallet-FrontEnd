@@ -51,6 +51,97 @@
             margin: 10px 8px;
             border-radius: 8px;
         }
+        .totalc{
+            display:flex;
+            flex-direction: row;
+            margin-top: 40px;
+            width: 80%;
+            justify-content: space-between;
+
+        }
+
+        .totaltotalc{
+            display:flex;
+            justify-content: center;
+        }   
+
+        .vertical1{
+            border-left: 2px solid black;
+            height: 300px;
+            position:absolute;
+            top: 30%;
+            left: 33%;
+        }
+
+        .vertical2{
+            border-left: 2px solid black;
+            height: 300px;
+            position:absolute;
+            top: 30%;
+            left: 66%;
+        }
+        .balance{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1%;
+            
+        }
+        
+
+        .balance h3{
+            margin-bottom:15px;
+            padding: 0px;
+        }
+        .cardsl h3{
+            margin-bottom:15px;
+            padding: 0px;
+        }
+
+        .balance h2{
+            margin-bottom:15px;
+            padding: 0px;
+        }
+        .balance p{
+            margin-top:5px;
+            margin-bottom:10px;
+            font-size: 18px;
+        }
+
+        .changest{
+            margin-top: 8%;
+            padding: 10px;
+                        
+        }
+        .changest p{
+            margin-top:5px;
+            margin-bottom:10px;
+            font-size: 18px;
+        }
+
+        .changest h3{
+            margin-top: -5%;
+            margin-bottom:25px;
+        }
+
+        .cardsl{
+            margin-top: 7%;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+
+                        
+        }
+        .cardsl h2{
+            margin-bottom: 20px;
+        }
+        .cardsl p{
+            margin-top:5px;
+            margin-bottom:10px;
+            font-size: 18px;
+        }
+
     </style>
 </head>
 <body>
@@ -65,29 +156,58 @@
             
         </div>
     </nav>
-<div class="logs">
-    <h1>Login with mobile number</h1>
-    <p>Mobile No: <input type="text", id="Mobileinput"></p>
-    <p>Device id: <input type="text", id="Didinput"></p>
-    <input type="button" class="button" onclick="Create()" value="Login">
+    <div class="totaltotalc">
+<div class="totalc">
+<div class="changest">
+    <h3>Login with mobile number</h3>
+    <p>Mobile No: <input type="text", id="Mobileinput1"></p>
+    <p>Device id: <input type="text", id="Didinput1"></p>
+    <input type="button" class="button" onclick="Loginm()" value="Login">
 
-    <p id="display"></p>
-    <p>OTP: <input type="number", id="OTPinput"></p>
-    <input type="button" class="button" onclick="OTPvalidation()" value="Validate OTP">
+    <p id="display1"></p>
+    <p>OTP: <input type="number", id="OTPinput1"></p>
+    <input type="button" class="button" onclick="OTPvalidation1()" value="Validate OTP">
     
-    <p id="otpresponse"></p>
-    <p id="displayOTP"></p>
-    <input type="button" class="button" onclick="location.href='login.html'" value="Go Back to Login Page">
+    <p id="otpresponse1"></p>
+    <p id="displayOTP1"></p>
 </div>
+
+<div class= "balance">
+    <h3>Wallet Login</h3>
+    <p>Username: <input type="text", id="usern"></p>
+    <p>Password: <input type="password", id="pword"></p>
+    <input type="button" class="button" onclick="Login()" value="Login">
+    <input type="button" class="button" onclick="Forgot()" value="Forgot Password">
+    <p id="displayup"></p>
+
+</div>
+<hr class="vertical1">
+        <hr class="vertical2">
+
+<div class ="cardsl">
+    <h3>Register with mobile number</h3>
+    <p id="checkk">Mobile No: <input type="text", id="Mobileinput2"></p>
+    <p>Device id: <input type="text", id="Didinput2"></p>
+    <input type="button" class="button" onclick="Create()" value="Register">
+    <p id="displayc"></p>
+    <p>OTP: <input type="number", id="OTPinput2"></p>
+    <input type="button" class="button" onclick="OTPvalidation2()" value="Validate OTP">
+    <p id="otpresponse2"></p>
+    <p id="displayOTP2"></p>
+
+</div>
+</div>
+</div>
+
 </body>
 <script>
-    async function Create(){
-        document.getElementById("display").innerHTML="";
+    async function Loginm(){
+        document.getElementById("display1").innerHTML="";
         let headers = new Headers();
 
         headers.append('Content-Type', 'application/json');
-    var MN=document.getElementById("Mobileinput").value;
-    var DI=document.getElementById("Didinput").value;
+    var MN=document.getElementById("Mobileinput1").value;
+    var DI=document.getElementById("Didinput1").value;
     fetch("http://localhost:8080/User/LoginUserwithMobileNo",{
         method:'POST',
         body:JSON.stringify({mobileno: MN, deviceid: DI}),
@@ -101,7 +221,7 @@
         localStorage.setItem("register_Mobile_Response", JSON.stringify(json));
         var login_mobile_response=JSON.parse(localStorage.getItem("register_Mobile_Response"));
         console.log(login_mobile_response.responseCode);
-        document.getElementById("display").innerHTML=login_mobile_response.response;
+        document.getElementById("display1").innerHTML=login_mobile_response.response;
     })
     .catch(error => console.log('Authorization failed : ' + error.message));
     
@@ -109,13 +229,13 @@
 }
 
 
-    async function OTPvalidation(){
-        document.getElementById("displayOTP").innerHTML="";
+    async function OTPvalidation1(){
+        document.getElementById("displayOTP1").innerHTML="";
         let headers = new Headers();
 
         headers.append('Content-Type', 'application/json');
-    var MN=document.getElementById("Mobileinput").value;
-    var otpin=document.getElementById("OTPinput").value;
+        var MN=document.getElementById("Mobileinput1").value;
+    var otpin=document.getElementById("OTPinput1").value;
     fetch("http://localhost:8080/User/ValidateOTP",{
         method:'POST',
         body:JSON.stringify({mobileno: MN, otp: otpin}),
@@ -129,9 +249,9 @@
         localStorage.setItem("login_OTP_Response", JSON.stringify(json));
         var login_mobile_response2=JSON.parse(localStorage.getItem("login_OTP_Response"));
         console.log(login_mobile_response2.responseCode);
-        document.getElementById("displayOTP").innerHTML=login_mobile_response2.response;
+        document.getElementById("displayOTP1").innerHTML=login_mobile_response2.response;
         if(login_mobile_response2.responseCode==="OK"){
-        document.getElementById("displayOTP").innerHTML=login_mobile_response2.response;
+        document.getElementById("displayOTP1").innerHTML=login_mobile_response2.response;
         localStorage.setItem("CurrentUser_mobile",MN)
         window.location.href = "wallet_frag.html";
 }
@@ -142,6 +262,95 @@
 
     }
 
+
+    async function Login(){
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+    var MN=document.getElementById("usern").value;
+    var DI=document.getElementById("pword").value;
+    fetch("http://localhost:8080/User/LoginUser",{
+        method:'POST',
+        body:JSON.stringify({username: MN, password: DI}),
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json)
+        localStorage.setItem("loginResponse", JSON.stringify(json))
+        var login_username_Resp=JSON.parse(localStorage.getItem("loginResponse"));
+        console.log(login_username_Resp.responseCode)
+        document.getElementById("displayup").innerHTML=login_username_Resp.response;
+        if(login_username_Resp.responseCode=="OK"){
+        console.log(login_username_Resp.responseCode)
+        localStorage.setItem("CurrentUser_mobile",MN)
+        login_username_Resp=null
+        window.location.href = "wallet_frag.html";
+    }
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+    
+    }
+
+
+    async function Create(){
+        document.getElementById("displayc").innerHTML="";
+        let headers = new Headers();
+
+        headers.append('Content-Type', 'application/json');
+    var MN=document.getElementById("Mobileinput2").value;
+    var DI=document.getElementById("Didinput2").value;
+    fetch("http://localhost:8080/User/CreateUserwithMobileNo",{
+        method:'PUT',
+        body:JSON.stringify({mobileno: MN, deviceid: DI}),
+        headers: headers
+        
+        
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("register_Mobile_Response", JSON.stringify(json));
+        var resp=JSON.parse(localStorage.getItem("register_Mobile_Response"));
+        console.log(resp.responseCode);
+        document.getElementById("displayc").innerHTML=resp.response;
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+    
+    
+}
+
+
+    async function OTPvalidation2(){
+        document.getElementById("displayOTP2").innerHTML="";
+        let headers = new Headers();
+
+        headers.append('Content-Type', 'application/json');
+    var MN=document.getElementById("Mobileinput2").value;
+    var otpin=document.getElementById("OTPinput2").value;
+    fetch("http://localhost:8080/User/ValidateOTP",{
+        method:'POST',
+        body:JSON.stringify({mobileno: MN, otp: otpin}),
+        headers: headers
+        
+        
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+        localStorage.setItem("register_OTP_Response", JSON.stringify(json));
+        var resp1=JSON.parse(localStorage.getItem("register_OTP_Response"));
+        console.log(resp1.responseCode);
+        if(resp1.responseCode=="OK"){
+            document.getElementById("displayOTP2").innerHTML="OTP Verified, Registration successful";
+        }
+        document.getElementById("displayOTP2").innerHTML=resp1.response;
+        
+    })
+    .catch(error => console.log('Authorization failed : ' + error.message));
+    
+    
+}
 
 
 
