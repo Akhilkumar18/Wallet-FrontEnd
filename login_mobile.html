@@ -283,7 +283,7 @@
         document.getElementById("displayup").innerHTML=login_username_Resp.response;
         if(login_username_Resp.responseCode=="OK"){
         console.log(login_username_Resp.responseCode)
-        localStorage.setItem("CurrentUser_mobile",MN)
+        localStorage.setItem("CurrentUser_mobile",login_username_Resp.response)
         login_username_Resp=null
         window.location.href = "wallet_frag.html";
     }

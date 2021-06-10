@@ -127,6 +127,7 @@
 		let headers = new Headers();
         headers.append('Content-Type', 'application/json');
 		mobileno=localStorage.getItem("CurrentUser_mobile");
+		document.getElementById("mobileno").value=mobileno;
 		await fetch("http://localhost:8080/User/UserDetails",{
 	        method:'POST',
 	        body:JSON.stringify({"mobileno":mobileno}),
