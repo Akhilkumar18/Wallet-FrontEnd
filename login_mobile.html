@@ -267,9 +267,9 @@
         headers.append('GET', 'POST', 'PUT', 'OPTIONS');
     var MN=document.getElementById("usern").value;
     var DI=document.getElementById("pword").value;
-    fetch("http://localhost:8080/User/LoginUser",{
-        method:'POST',
-        body:JSON.stringify({username: MN, password: DI}),
+    var url="http://localhost:8080/User/LoginUser?"+"username="+MN+"&password="+DI;
+    fetch(url,{
+        method:'GET',
         headers: headers
     })
     .then(response => response.json())
