@@ -128,9 +128,9 @@
         headers.append('Content-Type', 'application/json');
         headers.append('GET', 'POST', 'PUT', 'OPTIONS');
         var mob=localStorage.getItem("CurrentUser_mobile");
-        fetch("http://localhost:8080/Wallet/MultipleWalletDetails",{
-            method:'POST',
-            body: JSON.stringify({mobileno: mob, sortby: "ASC", status:"ALL"}),
+        var url1="http://localhost:8080/Wallet/MultipleWalletDetails?"+"mobileno="+mob+"&sortby=ASC&status=ALL"
+        fetch(url1,{
+            method:'GET',
             headers: headers
         })
         .then(response => response.json())
@@ -164,9 +164,9 @@
         var ord=document.getElementById("order").value;
         var mob=localStorage.getItem("CurrentUser_mobile");
         console.log(localStorage.getItem("CurrentUser_mobile"));
-        fetch("http://localhost:8080/Wallet/MultipleWalletDetails",{
-            method:'POST',
-            body: JSON.stringify({mobileno: mob, sortby: ord, status:st}),
+        var url2="http://localhost:8080/Wallet/MultipleWalletDetails?"+"mobileno="+mob+"&sortby="+ord+"&status="+st;
+        fetch(url2,{
+            method:'GET',
             headers: headers
         })
         .then(response => response.json())

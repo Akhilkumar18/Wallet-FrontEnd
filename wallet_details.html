@@ -315,9 +315,9 @@
                 document.getElementById("changepw").style.visibility="hidden";                
                 console.log(selectedwallet);
                 console.log(localStorage.getItem("CurrentUser_mobile"));
-                fetch("http://localhost:8080/Wallet/GetWalletBalance",{
-                    method:'POST',
-                    body: JSON.stringify({walletid:selectedwallet}),
+                var url2="http://localhost:8080/Wallet/GetWalletBalance?"+"walletid="+selectedwallet;
+                fetch(url2,{
+                    method:'GET',
                     headers: headers
                 })
                 .then(response => response.json())
@@ -328,10 +328,9 @@
                 })
                 .catch(error => console.log('Authorization failed : ' + error.message));
 
-
-                fetch("http://localhost:8080/Wallet/SingleWalletDetails",{
-                    method:'POST',
-                    body: JSON.stringify({walletid:selectedwallet}),
+                var url1="http://localhost:8080/Wallet/SingleWalletDetails?"+"walletid="+selectedwallet;
+                fetch(url1,{
+                    method:'GET',
                     headers: headers
                 })
                 .then(response => response.json())
