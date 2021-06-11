@@ -129,8 +129,8 @@
 		mobileno=localStorage.getItem("CurrentUser_mobile");
 		document.getElementById("mobileno").value=mobileno;
 		document.getElementById("mobileno").disabled=true;
-		var url="http://localhost:8080/User/UserDetails"+"mobileno="+mobileno;
-		await fetch(,{
+		var url="http://localhost:8080/User/UserDetails?"+"mobileno="+mobileno;
+		await fetch(url,{
 	        method:'GET',
 	        headers: headers
 	    })
