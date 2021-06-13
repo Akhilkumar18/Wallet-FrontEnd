@@ -68,6 +68,7 @@
 		<th>Sender</th>
 		<th>Receiver</th>
 		<th>Type</th>
+        <th>Status</th>
 		<th>Transaction Time</th>
 		<th>Amount</th>
 	</tr>
@@ -107,9 +108,8 @@
 			let headers = new Headers();
             headers.append('Content-Type', 'application/json');
             var MN=localStorage.getItem("CurrentUser_mobile");
-        	fetch("http://localhost:8080/Payment/GetWalletTransactions",{
-            method:'POST',
-            body:JSON.stringify({walletid: selectedwallet}),
+        	fetch("http://localhost:8080/Payment/GetWalletTransactions?walletid="+selectedwallet,{
+            method:'GET',
             headers: headers
         })
         .then(response => response.json())
@@ -142,6 +142,7 @@
 				alltransactions.push(translist[k].sender);
 				alltransactions.push(translist[k].receiver);
 				alltransactions.push(translist[k].type);
+                alltransactions.push(translist[k].status);
 				alltransactions.push(translist[k].transactiontime);
 				alltransactions.push(translist[k].transactionamount);
 
@@ -151,17 +152,17 @@
             for (var i = rowCount - 1; i > 0; i--) {
                 table1.deleteRow(i);
             }
-            for (var i = 0 ; i < alltransactions.length; i=i+6) {
+            for (var i = 0 ; i < alltransactions.length; i=i+7) {
                 var tr = document.createElement("tr");
-				for(var j=i;j<=i+5;j++){
+				for(var j=i;j<=i+6;j++){
                     var td = document.createElement("td");
                     var txt = document.createTextNode(alltransactions[j]);
                     td.appendChild(txt);
-					if(j==i+5 && alltransactions[i+3]=="Credit"){
+					if(j==i+6 && alltransactions[i+3]=="Credit"){
 						td.style.color="#008000";
 						td.style.fontWeight=900;
 					}
-					else if(j==i+5){
+					else if(j==i+6){
 						td.style.color="#ff0000";
 						td.style.fontWeight=900;
 					}
@@ -185,9 +186,8 @@
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
             var MN=localStorage.getItem("CurrentUser_mobile");
-        	fetch("http://localhost:8080/Payment/GetUserTransactions",{
-            method:'POST',
-            body:JSON.stringify({mobileno: MN}),
+        	fetch("http://localhost:8080/Payment/GetUserTransactions?mobileno="+MN,{
+            method:'GET',
             headers: headers
         })
         .then(response => response.json())
@@ -220,6 +220,7 @@
 				alltransactions.push(translist[k].sender);
 				alltransactions.push(translist[k].receiver);
 				alltransactions.push(translist[k].type);
+                alltransactions.push(translist[k].status);
 				alltransactions.push(translist[k].transactiontime);
 				alltransactions.push(translist[k].transactionamount);
 
@@ -229,17 +230,17 @@
             for (var i = rowCount - 1; i > 0; i--) {
                 table1.deleteRow(i);
             }
-            for (var i = 0 ; i < alltransactions.length; i=i+6) {
+            for (var i = 0 ; i < alltransactions.length; i=i+7) {
                 var tr = document.createElement("tr");
-				for(var j=i;j<=i+5;j++){
+				for(var j=i;j<=i+6;j++){
                     var td = document.createElement("td");
                     var txt = document.createTextNode(alltransactions[j]);
                     td.appendChild(txt);
-					if(j==i+5 && alltransactions[i+3]=="Credit"){
+					if(j==i+6 && alltransactions[i+3]=="Credit"){
 						td.style.color="#008000";
 						td.style.fontWeight=900;
 					}
-					else if(j==i+5){
+					else if(j==i+6){
 						td.style.color="#ff0000";
 						td.style.fontWeight=900;
 					}

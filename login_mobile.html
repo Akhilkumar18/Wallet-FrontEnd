@@ -161,7 +161,6 @@
 <div class="changest">
     <h3>Login with mobile number</h3>
     <p>Mobile No: <input type="text", id="Mobileinput1"></p>
-    <p>Device id: <input type="text", id="Didinput1"></p>
     <input type="button" class="button" onclick="Loginm()" value="Login">
 
     <p id="display1"></p>
@@ -187,7 +186,6 @@
 <div class ="cardsl">
     <h3>Register with mobile number</h3>
     <p id="checkk">Mobile No: <input type="text", id="Mobileinput2"></p>
-    <p>Device id: <input type="text", id="Didinput2"></p>
     <input type="button" class="button" onclick="Create()" value="Register">
     <p id="displayc"></p>
     <p>OTP: <input type="number", id="OTPinput2"></p>
@@ -207,7 +205,7 @@
 
         headers.append('Content-Type', 'application/json');
     var MN=document.getElementById("Mobileinput1").value;
-    var DI=document.getElementById("Didinput1").value;
+    var DI="";
     var url="http://localhost:8080/User/LoginUserwithMobileNo?"+"mobileno="+MN+"&deviceid="+DI;
     fetch(url,{
         method:'GET',
@@ -297,7 +295,7 @@
 
         headers.append('Content-Type', 'application/json');
     var MN=document.getElementById("Mobileinput2").value;
-    var DI=document.getElementById("Didinput2").value;
+    var DI="";
     fetch("http://localhost:8080/User/CreateUserwithMobileNo",{
         method:'PUT',
         body:JSON.stringify({mobileno: MN, deviceid: DI}),
