@@ -197,10 +197,11 @@
 				<div id='receivers'>
 				    <p>Receiver Mobile No.</p><input type="text" class="receivermobileno">
 				</div>
-				<p><button class="button" id="add-button">Add Receiver</button></p>
+				<p><button class="button" id="add-button">Add another Receiver</button></p>
 				<p>Total Amount<input type="text" id="amount"></p>
-				<p>Device ID<input type="text" id="deviceid"></p>
 				<button class="button"  onclick="payment()">Make Payment</button>
+				<table style="width:100%" class="cdtable" id="rtable">
+				</table>
 				<p id="display3"></p>
             </div>
         </div>
@@ -325,7 +326,7 @@
         let receiversList = []
         for (let e of receiverwalletid) receiversList.push(e.value);
         var amount=document.getElementById("amount").value;
-        var deviceid=document.getElementById("deviceid").value;
+        var deviceid="";
         console.log({Receivermobileno:receiversList.join(','), senderwalletid:senderwalletid, deviceid:deviceid , money:amount})
         console.log(receiversList.length)
         if(receiversList.length===1){
@@ -356,7 +357,36 @@
 	            localStorage.setItem("SendToMultiple_Response", JSON.stringify(json));
 	            var resp=JSON.parse(localStorage.getItem("SendToMultiple_Response"));
 	            console.log(resp.responseCode);
-	            document.getElementById("display3").innerHTML=resp.response;
+				var translist= json.response;
+				console.log(typeof json.response);
+				console.log(translist);
+				var alltransactions=[];
+            	for(var k in translist){
+                alltransactions.push(k);
+				alltransactions.push(translist[k].response);
+				var table1 = document.getElementById("rtable");
+				var tbody = document.createElement("tbody")
+				var rowCount = table1.rows.length;
+				for (var i = rowCount - 1; i >= 0; i--) {
+					table1.deleteRow(i);
+            	}
+				for (var i = 0 ; i < alltransactions.length; i=i+2){
+					var tr = document.createElement("tr");
+                    var td = document.createElement("td");
+                    var txt = document.createTextNode(alltransactions[i]+":");
+                    td.appendChild(txt);
+                    tr.appendChild(td);
+
+                    var td = document.createElement("td");
+                    var txt = document.createTextNode(alltransactions[i+1]);
+                    td.appendChild(txt);
+                    tr.appendChild(td);
+                    tbody.appendChild(tr);
+				}
+				table1.appendChild(tbody);
+
+            } 
+	            //document.getElementById("display3").innerHTML=resp.response;
 	        })
 	        .catch(error => console.log('Authorization failed : ' + error.message));
     	}
